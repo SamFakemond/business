@@ -1,0 +1,2109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f1117">
+<meta name="description" content="AQA A-Level Business Studies Revision App – Spec 7132, for 2026 exams">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="AQA Business">
+<title>AQA A-Level Business Revision | 7132</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #181c27;
+    --surface2: #1f2436;
+    --border: #2a3050;
+    --gold: #f0b429;
+    --gold-dim: #c28a10;
+    --teal: #2dd4bf;
+    --rose: #fb7185;
+    --violet: #a78bfa;
+    --blue: #60a5fa;
+    --green: #4ade80;
+    --text: #e8eaf6;
+    --text-muted: #8892b0;
+    --text-dim: #5a6680;
+    --radius: 12px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.4);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    overflow-x: hidden;
+  }
+
+  /* ── SIDEBAR ── */
+  #sidebar {
+    width: 280px;
+    min-height: 100vh;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    z-index: 100;
+    transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+    overflow-y: auto;
+  }
+
+  #sidebar .brand {
+    padding: 24px 20px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  #sidebar .brand h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--gold);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+  #sidebar .brand span {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-weight: 400;
+    margin-top: 3px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  #sidebar nav { flex: 1; padding: 12px 0; }
+
+  .nav-section {
+    padding: 8px 16px 4px;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    font-weight: 500;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 20px;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: all 0.15s;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.3;
+  }
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+  .nav-item.active {
+    background: rgba(240,180,41,0.08);
+    border-left-color: var(--gold);
+    color: var(--gold);
+  }
+  .nav-item .num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--text-dim);
+    min-width: 22px;
+  }
+  .nav-item.active .num { color: var(--gold-dim); }
+
+  .sidebar-progress {
+    padding: 16px 20px;
+    border-top: 1px solid var(--border);
+  }
+  .sidebar-progress .prog-label {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .prog-bar-outer {
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .prog-bar-inner {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), #f59e0b);
+    border-radius: 2px;
+    transition: width 0.5s ease;
+  }
+
+  /* ── MAIN ── */
+  #main {
+    margin-left: 280px;
+    flex: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── TOPBAR ── */
+  #topbar {
+    position: sticky; top: 0;
+    background: rgba(15,17,23,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 50;
+    gap: 16px;
+  }
+
+  #hamburger {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    color: var(--text);
+  }
+  #hamburger svg { width: 22px; height: 22px; }
+
+  #search-wrap {
+    flex: 1;
+    max-width: 400px;
+    position: relative;
+  }
+  #search-input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px 8px 36px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  #search-input:focus { border-color: var(--gold); }
+  #search-input::placeholder { color: var(--text-dim); }
+  .search-icon {
+    position: absolute; left: 10px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-dim);
+    pointer-events: none;
+  }
+
+  .topbar-actions { display: flex; gap: 8px; }
+  .btn {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 7px 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 0.03em;
+    transition: all 0.15s;
+  }
+  .btn-ghost {
+    background: var(--surface2);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { color: var(--text); border-color: var(--text-dim); }
+  .btn-gold {
+    background: var(--gold);
+    color: #0f1117;
+  }
+  .btn-gold:hover { background: #f5c435; }
+
+  /* ── CONTENT ── */
+  #content { padding: 40px 48px; max-width: 900px; }
+
+  /* ── HOME ── */
+  #view-home .hero {
+    margin-bottom: 40px;
+  }
+  #view-home .hero-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  #view-home .hero h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.6rem;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin-bottom: 12px;
+  }
+  #view-home .hero h2 em {
+    font-style: normal;
+    color: var(--gold);
+  }
+  #view-home .hero p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    max-width: 540px;
+  }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+  .stat-card .val {
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .stat-card .lbl {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .section-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  .section-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .section-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--accent-color, var(--gold));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s ease;
+  }
+  .section-card:hover { border-color: var(--accent-color, var(--gold)); transform: translateY(-2px); box-shadow: var(--shadow); }
+  .section-card:hover::before { transform: scaleX(1); }
+  .section-card .card-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+  .section-card h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+  .section-card p {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  .section-card .done-badge {
+    position: absolute;
+    top: 14px; right: 14px;
+    width: 18px; height: 18px;
+    background: var(--green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6rem;
+    color: #0f1117;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .section-card.done .done-badge { opacity: 1; }
+
+  /* ── TOPIC VIEW ── */
+  #view-topic { display: none; }
+  .topic-header {
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .topic-header .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    margin-bottom: 16px;
+    transition: color 0.15s;
+  }
+  .topic-header .back-btn:hover { color: var(--gold); }
+  .topic-header .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+  }
+  .topic-header h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.9rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 8px;
+  }
+  .topic-header p {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+  .topic-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .subtopic {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .subtopic:hover { border-color: var(--text-dim); }
+  .subtopic-head {
+    padding: 16px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    user-select: none;
+  }
+  .subtopic-head h4 {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .subtopic-head .chevron {
+    color: var(--text-dim);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+  .subtopic.open .subtopic-head .chevron { transform: rotate(180deg); }
+  .subtopic.open { border-color: var(--gold); }
+  .subtopic.open .subtopic-head h4 { color: var(--gold); }
+
+  .subtopic-body {
+    display: none;
+    padding: 0 20px 20px;
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+  }
+  .subtopic.open .subtopic-body { display: block; }
+
+  .subtopic-body p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.75;
+    margin-bottom: 12px;
+  }
+
+  .key-terms {
+    background: var(--surface2);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 12px 0;
+  }
+  .key-terms h5 {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+  .term-list { display: flex; flex-direction: column; gap: 6px; }
+  .term-item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 8px;
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+  .term-name {
+    font-family: 'DM Mono', monospace;
+    color: var(--teal);
+    font-size: 0.78rem;
+    padding-top: 1px;
+    white-space: nowrap;
+  }
+  .term-def { color: var(--text-muted); }
+
+  .formula-box {
+    background: rgba(240,180,41,0.07);
+    border: 1px solid rgba(240,180,41,0.25);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 10px 0;
+  }
+  .formula-box .f-label {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--gold-dim);
+    margin-bottom: 6px;
+  }
+  .formula-box code {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--gold);
+    display: block;
+    line-height: 1.7;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin: 12px 0;
+  }
+  .info-card {
+    background: var(--surface2);
+    border-radius: 8px;
+    padding: 12px;
+  }
+  .info-card h6 {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--violet);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .info-card ul {
+    list-style: none;
+  }
+  .info-card ul li {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    padding: 2px 0;
+    padding-left: 12px;
+    position: relative;
+    line-height: 1.5;
+  }
+  .info-card ul li::before {
+    content: '▸';
+    position: absolute; left: 0;
+    color: var(--text-dim);
+    font-size: 0.65rem;
+    top: 3px;
+  }
+
+  .mark-done-btn {
+    margin-top: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .mark-done-btn:hover { border-color: var(--green); color: var(--green); }
+  .mark-done-btn.done { background: rgba(74,222,128,0.1); border-color: var(--green); color: var(--green); }
+
+  /* ── QUIZ VIEW ── */
+  #view-quiz { display: none; }
+  .quiz-wrap {
+    max-width: 620px;
+  }
+  .quiz-header { margin-bottom: 28px; }
+  .quiz-header h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+  }
+  .quiz-header p { color: var(--text-muted); font-size: 0.85rem; }
+
+  .flashcard {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 36px;
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.1s;
+    perspective: 1000px;
+  }
+  .flashcard:hover { transform: scale(1.005); }
+  .flashcard.flipped .card-front { display: none; }
+  .flashcard:not(.flipped) .card-back { display: none; }
+
+  .card-front .card-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 16px;
+  }
+  .card-front .card-q {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.4;
+  }
+  .card-front .card-hint {
+    margin-top: 12px;
+    font-size: 0.75rem;
+    color: var(--text-dim);
+  }
+  .card-back .card-a {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.75;
+  }
+  .card-back .card-a strong { color: var(--teal); font-weight: 500; }
+
+  .quiz-progress {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+  .quiz-progress .qp-bar {
+    flex: 1;
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    margin: 0 12px;
+    overflow: hidden;
+  }
+  .quiz-progress .qp-fill {
+    height: 100%;
+    background: var(--gold);
+    border-radius: 2px;
+    transition: width 0.3s;
+  }
+
+  .quiz-controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    justify-content: center;
+  }
+  .qbtn {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.02em;
+  }
+  .qbtn-skip { background: var(--surface2); color: var(--text-muted); }
+  .qbtn-skip:hover { color: var(--text); border-color: var(--text-dim); }
+  .qbtn-good { background: rgba(74,222,128,0.1); color: var(--green); border-color: rgba(74,222,128,0.3); }
+  .qbtn-good:hover { background: rgba(74,222,128,0.2); }
+  .qbtn-hard { background: rgba(251,113,133,0.1); color: var(--rose); border-color: rgba(251,113,133,0.3); }
+  .qbtn-hard:hover { background: rgba(251,113,133,0.2); }
+
+  .quiz-result {
+    text-align: center;
+    padding: 48px;
+    display: none;
+  }
+  .quiz-result .score {
+    font-family: 'Syne', sans-serif;
+    font-size: 4rem;
+    font-weight: 800;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .quiz-result p { color: var(--text-muted); margin-bottom: 24px; }
+  .missed-summary {
+    background: rgba(251,113,133,0.08);
+    border: 1px solid rgba(251,113,133,0.25);
+    border-radius: 10px;
+    padding: 14px 20px;
+    margin-bottom: 20px;
+    text-align: left;
+    width: 100%;
+    max-width: 400px;
+  }
+  .missed-summary h5 {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--rose);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+  .missed-summary ul { list-style: none; }
+  .missed-summary ul li {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    padding: 3px 0;
+    padding-left: 14px;
+    position: relative;
+    line-height: 1.4;
+    border-bottom: 1px solid rgba(251,113,133,0.1);
+  }
+  .missed-summary ul li:last-child { border-bottom: none; }
+  .missed-summary ul li::before { content: '✕'; position: absolute; left: 0; color: var(--rose); font-size: 0.6rem; top: 4px; }
+  .result-btns { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+
+  /* Missed bank view */
+  #view-missed { display: none; }
+  .missed-bank-header { margin-bottom: 24px; }
+  .missed-bank-header h2 { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; letter-spacing: -0.02em; }
+  .missed-bank-header p { color: var(--text-muted); font-size: 0.85rem; margin-top: 6px; }
+  .missed-card-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+  .missed-card-item {
+    background: var(--surface);
+    border: 1px solid rgba(251,113,133,0.3);
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .missed-card-item .mc-info { flex: 1; }
+  .missed-card-item .mc-section {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--rose);
+    margin-bottom: 4px;
+  }
+  .missed-card-item .mc-q { font-size: 0.85rem; color: var(--text); line-height: 1.4; }
+  .missed-card-item .mc-remove {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0 4px;
+    transition: color 0.15s;
+    flex-shrink: 0;
+  }
+  .missed-card-item .mc-remove:hover { color: var(--rose); }
+  .missed-empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+  }
+  .missed-empty .em-icon { font-size: 3rem; margin-bottom: 12px; }
+  .missed-empty p { font-size: 0.9rem; }
+
+  /* ── OVERLAY ── */
+  #overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 90;
+  }
+
+  /* ── SEARCH RESULTS ── */
+  #search-results {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0; right: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-top: 4px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    z-index: 200;
+    max-height: 340px;
+    overflow-y: auto;
+  }
+  .sr-item {
+    padding: 11px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.1s;
+  }
+  .sr-item:last-child { border-bottom: none; }
+  .sr-item:hover { background: var(--surface2); }
+  .sr-item .sr-section { font-size: 0.68rem; color: var(--text-dim); margin-bottom: 2px; }
+  .sr-item .sr-term { font-size: 0.85rem; color: var(--teal); font-weight: 500; }
+  .sr-item .sr-def { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; line-height: 1.4; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    #sidebar { transform: translateX(-100%); }
+    #sidebar.open { transform: translateX(0); }
+    #main { margin-left: 0; }
+    #content { padding: 24px 20px; }
+    #hamburger { display: block; }
+    #overlay.open { display: block; }
+    .section-grid { grid-template-columns: 1fr; }
+    .stats-row { grid-template-columns: repeat(3, 1fr); }
+    .info-grid { grid-template-columns: 1fr; }
+    #view-home .hero h2 { font-size: 1.8rem; }
+  }
+
+  @media (max-width: 480px) {
+    .stats-row { grid-template-columns: 1fr; }
+    #topbar { padding: 0 16px; }
+  }
+
+  /* ── CONFIRM MODAL ── */
+  #confirm-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    align-items: center;
+    justify-content: center;
+  }
+  #confirm-modal.open { display: flex; }
+  #confirm-modal .modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+  }
+  #confirm-modal .modal-box {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px 28px 24px;
+    max-width: 360px;
+    width: calc(100% - 40px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    animation: fadeUp 0.2s ease both;
+  }
+  #confirm-modal .modal-icon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+  }
+  #confirm-modal h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+  #confirm-modal p {
+    font-size: 0.83rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  #confirm-modal .modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up { animation: fadeUp 0.35s ease both; }
+  .fade-up-2 { animation: fadeUp 0.35s 0.08s ease both; }
+  .fade-up-3 { animation: fadeUp 0.35s 0.16s ease both; }
+  .fade-up-4 { animation: fadeUp 0.35s 0.24s ease both; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside id="sidebar">
+  <div class="brand">
+    <h1>AQA Business</h1>
+    <span>A-Level · Spec 7132 · 2026</span>
+  </div>
+  <nav id="nav">
+    <div class="nav-section">Navigation</div>
+    <div class="nav-item active" data-view="home">
+      <span class="num">⌂</span> Dashboard
+    </div>
+    <div class="nav-item" data-view="quiz">
+      <span class="num">✦</span> Flashcard Quiz
+    </div>
+    <div class="nav-item" data-view="missed" id="nav-missed" style="display:none">
+      <span class="num">⚑</span> Revise Weak Cards <span id="missed-badge" style="margin-left:auto;background:var(--rose);color:#fff;font-size:0.65rem;font-family:'DM Mono',monospace;padding:1px 6px;border-radius:10px;font-weight:700"></span>
+    </div>
+    <div class="nav-section" style="margin-top:8px">Topics</div>
+    <div class="nav-item" data-view="topic" data-id="0"><span class="num">3.1</span> What is Business?</div>
+    <div class="nav-item" data-view="topic" data-id="1"><span class="num">3.2</span> Managers & Leadership</div>
+    <div class="nav-item" data-view="topic" data-id="2"><span class="num">3.3</span> Marketing Management</div>
+    <div class="nav-item" data-view="topic" data-id="3"><span class="num">3.4</span> Operational Management</div>
+    <div class="nav-item" data-view="topic" data-id="4"><span class="num">3.5</span> Financial Management</div>
+    <div class="nav-item" data-view="topic" data-id="5"><span class="num">3.6</span> Human Resources</div>
+    <div class="nav-item" data-view="topic" data-id="6"><span class="num">3.7</span> Strategic Position</div>
+    <div class="nav-item" data-view="topic" data-id="7"><span class="num">3.8</span> Strategic Direction</div>
+    <div class="nav-item" data-view="topic" data-id="8"><span class="num">3.9</span> Strategic Methods</div>
+    <div class="nav-item" data-view="topic" data-id="9"><span class="num">3.10</span> Managing Change</div>
+  </nav>
+  <div class="sidebar-progress">
+    <div class="prog-label">
+      <span>Progress</span>
+      <span id="prog-pct">0%</span>
+    </div>
+    <div class="prog-bar-outer">
+      <div class="prog-bar-inner" id="prog-bar" style="width:0%"></div>
+    </div>
+  </div>
+</aside>
+
+<div id="overlay"></div>
+
+<!-- MAIN -->
+<div id="main">
+  <!-- TOPBAR -->
+  <header id="topbar">
+    <button id="hamburger" aria-label="Toggle menu">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+      </svg>
+    </button>
+    <div id="search-wrap">
+      <svg class="search-icon" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+        <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+      </svg>
+      <input type="text" id="search-input" placeholder="Search terms, concepts, formulas…" autocomplete="off">
+      <div id="search-results"></div>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn btn-ghost" id="reset-btn" title="Reset all progress and missed cards">Reset Progress</button>
+      <button class="btn btn-gold" data-view="quiz" data-id="">Quiz Me</button>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <div id="content">
+
+    <!-- HOME VIEW -->
+    <div id="view-home" class="fade-up">
+      <div class="hero fade-up">
+        <div class="hero-label">AQA 7132 · For 2026 Exams</div>
+        <h2>Business Studies<br><em>Revision Hub</em></h2>
+        <p>All 10 specification sections, key terms, formulas, and flashcards. Work through each topic, mark what you know, and quiz yourself to lock it in.</p>
+      </div>
+
+      <div class="stats-row fade-up-2">
+        <div class="stat-card">
+          <div class="val">10</div>
+          <div class="lbl">Spec Sections</div>
+        </div>
+        <div class="stat-card">
+          <div class="val" id="stat-done">0</div>
+          <div class="lbl">Topics Completed</div>
+        </div>
+        <div class="stat-card">
+          <div class="val" id="stat-cards">120</div>
+          <div class="lbl">Flashcards</div>
+        </div>
+      </div>
+
+      <div class="section-grid fade-up-3" id="section-grid">
+        <!-- populated by JS -->
+      </div>
+    </div>
+
+    <!-- TOPIC VIEW -->
+    <div id="view-topic">
+      <!-- populated by JS -->
+    </div>
+
+    <!-- QUIZ VIEW -->
+    <div id="view-quiz">
+      <div class="quiz-wrap">
+        <div class="quiz-header">
+          <h2>Flashcard Quiz</h2>
+          <p>Click each card to reveal the answer. Mark as Got It or Revise Again.</p>
+        </div>
+
+        <div class="quiz-progress">
+          <span id="q-cur">1</span>
+          <div class="qp-bar"><div class="qp-fill" id="q-fill" style="width:0%"></div></div>
+          <span id="q-total">30</span>
+        </div>
+
+        <div class="flashcard" id="flashcard">
+          <div class="card-front">
+            <div class="card-tag" id="fc-section">Section 3.1</div>
+            <div class="card-q" id="fc-question">Loading…</div>
+            <div class="card-hint">Tap to reveal answer</div>
+          </div>
+          <div class="card-back">
+            <div class="card-a" id="fc-answer">Answer goes here</div>
+          </div>
+        </div>
+
+        <div class="quiz-controls">
+          <button class="qbtn qbtn-hard" id="q-hard">✕ Revise Again</button>
+          <button class="qbtn qbtn-skip" id="q-flip">Flip Card</button>
+          <button class="qbtn qbtn-good" id="q-good">✓ Got It</button>
+        </div>
+
+        <div class="quiz-result" id="quiz-result">
+          <div class="score" id="result-score">0/0</div>
+          <p id="result-msg">Quiz complete!</p>
+          <div class="missed-summary" id="missed-summary" style="display:none">
+            <h5>Cards to Revise</h5>
+            <ul id="missed-list-preview"></ul>
+          </div>
+          <div class="result-btns">
+            <button class="btn btn-ghost" id="q-revise-missed" style="display:none">⚑ Revise Weak Cards</button>
+            <button class="btn btn-gold" id="q-restart">↺ Start Again</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MISSED BANK VIEW -->
+    <div id="view-missed">
+      <div class="missed-bank-header fade-up">
+        <h2>⚑ Revise Weak Cards</h2>
+        <p>These are the flashcards you marked "Revise Again". Quiz yourself on them or remove ones you've now learned.</p>
+      </div>
+      <div id="missed-bank-list" class="missed-card-list fade-up-2"></div>
+      <div id="missed-bank-actions" style="display:flex;gap:10px;flex-wrap:wrap"></div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- CONFIRM MODAL -->
+<div id="confirm-modal">
+  <div class="modal-backdrop" id="modal-backdrop"></div>
+  <div class="modal-box">
+    <div class="modal-icon">⚠️</div>
+    <h3>Reset all progress?</h3>
+    <p>This will clear your completed topics, all saved weak cards, and quiz history. This can't be undone.</p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="modal-cancel">Cancel</button>
+      <button class="btn" style="background:var(--rose);color:#fff" id="modal-confirm">Yes, Reset</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// =====================================================
+// DATA: AQA A-Level Business 7132 – All 10 Sections
+// =====================================================
+const TOPICS = [
+{
+  id: 0,
+  num: "3.1",
+  title: "What is Business?",
+  accent: "#f0b429",
+  summary: "The purpose of business activity, enterprise, stakeholders, business objectives and the external environment.",
+  subtopics: [
+    {
+      title: "Enterprise & Entrepreneurship",
+      content: `<p>An <strong>entrepreneur</strong> is someone who organises, manages and bears the risks of a business venture in pursuit of profit. They identify opportunities, take risks, and bring together the factors of production.</p>
+      <p><strong>Enterprise</strong> involves showing initiative, taking risks, innovating and being creative. Successful entrepreneurs typically display characteristics such as risk-taking, initiative, creativity, determination and resilience.</p>
+      <div class="key-terms"><h5>Key Terms</h5><div class="term-list">
+        <div class="term-item"><span class="term-name">Entrepreneur</span><span class="term-def">An individual who sets up and runs a business, taking on financial risk in hope of profit</span></div>
+        <div class="term-item"><span class="term-name">Risk</span><span class="term-def">The chance that business activity may result in failure or financial loss</span></div>
+        <div class="term-item"><span class="term-name">Opportunity cost</span><span class="term-def">The next-best alternative foregone when a decision is made</span></div>
+        <div class="term-item"><span class="term-name">Added value</span><span class="term-def">The difference between a product's selling price and the cost of inputs used to make it</span></div>
+      </div></div>
+      <div class="formula-box"><div class="f-label">Formula</div><code>Added Value = Selling Price − Cost of Bought-in Materials & Components</code></div>`,
+    },
+    {
+      title: "Business Objectives",
+      content: `<p>Business objectives are targets that guide decisions and actions. They vary by type of business and context. For most private sector firms, profit is a primary objective, but firms may also pursue growth, market share, survival, customer satisfaction or social/ethical aims.</p>
+      <p>Objectives should ideally be <strong>SMART</strong>: Specific, Measurable, Achievable, Realistic, Time-bound.</p>
+      <div class="key-terms"><h5>Key Terms</h5><div class="term-list">
+        <div class="term-item"><span class="term-name">Mission statement</span><span class="term-def">A statement of the fundamental purpose and values of a business</span></div>
+        <div class="term-item"><span class="term-name">Corporate objective</span><span class="term-def">A target set at company-wide level to guide the whole business</span></div>
+        <div class="term-item"><span class="term-name">Profit</span><span class="term-def">Total revenue minus total costs</span></div>
+        <div class="term-item"><span class="term-name">Market share</span><span class="term-def">A firm's sales as a percentage of total market sales</span></div>
+      </div></div>
+      <div class="info-grid">
+        <div class="info-card"><h6>Private Sector Objectives</h6><ul><li>Profit maximisation</li><li>Revenue / market share growth</li><li>Survival</li><li>Corporate social responsibility</li></ul></div>
+        <div class="info-card"><h6>Public / Non-Profit Objectives</h6><ul><li>Provide services</li><li>Break even / avoid loss</li><li>Fulfil social mission</li><li>Maximise value for money</li></ul></div>
+      </div>`,
+    },
+    {
+      title: "Stakeholders",
+      content: `<p>Stakeholders are individuals or groups with an interest in business decisions. They can be <strong>internal</strong> (employees, managers, owners/shareholders) or <strong>external</strong> (customers, suppliers, government, local community, creditors).</p>
+      <p>Stakeholder interests often conflict — shareholders may want high dividends while employees want higher wages. Businesses must manage stakeholder relationships, often using a <strong>stakeholder mapping</strong> approach (Power–Interest grid).</p>
+      <div class="key-terms"><h5>Key Terms</h5><div class="term-list">
+        <div class="term-item"><span class="term-name">Stakeholder</span><span class="term-def">Any party with an interest in the decisions or performance of a business</span></div>
+        <div class="term-item"><span class="term-name">Shareholder</span><span class="term-def">An owner of shares in a limited company</span></div>
+        <div class="term-item"><span class="term-name">CSR</span><span class="term-def">Corporate Social Responsibility – actions going beyond legal obligations for social/environmental benefit</span></div>
+      </div></div>`,
+    },
+    {
+      title: "Business Growth",
+      content: `<p>Businesses can grow <strong>organically</strong> (internally, using own resources) or <strong>inorganically</strong> (externally, via mergers, acquisitions, or franchising). Growth can be measured by revenue, profit, employees, or market share.</p>
+      <p>Reasons for growth include economies of scale, increased market power, diversification and access to capital. However, businesses can also become too large — suffering <strong>diseconomies of scale</strong>.</p>
+      <div class="key-terms"><h5>Key Terms</h5><div class="term-list">
+        <div class="term-item"><span class="term-name">Economies of scale</span><span class="term-def">Cost advantages gained as output increases, reducing average cost per unit</span></div>
+        <div class="term-item"><span class="term-name">Diseconomies of scale</span><span class="term-def">Rising average costs when a firm becomes too large (e.g. poor communication, low morale)</span></div>
+        <div class="term-item"><span class="term-name">Merger</span><span class="term-def">Two businesses combining to form a single new entity</span></div>
+        <div class="term-item"><span class="term-name">Acquisition</span><span class="term-def">One business taking over another (can be hostile or agreed)</span></div>
+      </div></div>`,
+    },
+    {
+      title: "The External Environment (PESTLE)",
+      content: `<p>The external environment presents factors outside a firm's direct control that affect decisions and performance. PESTLE is a widely-used framework for analysing these.</p>
+      <div class="info-grid">
+        <div class="info-card"><h6>PESTLE Factors</h6><ul><li><strong>P</strong>olitical – government policy, trade deals</li><li><strong>E</strong>conomic – GDP, interest/exchange rates</li><li><strong>S</strong>ocial – demographics, lifestyles</li><li><strong>T</strong>echnological – automation, digital</li><li><strong>L</strong>egal – employment/consumer law</li><li><strong>E</strong>nvironmental – sustainability, climate</li></ul></div>
+        <div class="info-card"><h6>Economic Indicators</h6><ul><li>GDP growth rate</li><li>Inflation (CPI)</li><li>Interest rates (Bank Rate)</li><li>Exchange rates</li><li>Unemployment rate</li><li>Consumer confidence</li></ul></div>
+      </div>`,
+    },
+  ]
+},
+{
+  id: 1,
+  num: "3.2",
+  title: "Managers, Leadership & Decision Making",
+  accent: "#a78bfa",
+  summary: "Management and leadership styles, motivational theories and decision-making tools including decision trees.",
+  subtopics: [
+    {
+      title: "Management vs Leadership",
+      content: `<p><strong>Management</strong> involves planning, organising and controlling resources. <strong>Leadership</strong> involves inspiring and influencing people to work towards a shared vision. A manager does things right; a leader does the right things.</p>
+      <div class="key-terms"><h5>Leadership Styles</h5><div class="term-list">
+        <div class="term-item"><span class="term-name">Autocratic</span><span class="term-def">Leader makes all decisions without consultation; fast but may demotivate staff</span></div>
+        <div class="term-item"><span class="term-name">Democratic</span><span class="term-def">Involves staff in decision-making; improves morale but can be slow</span></div>
+        <div class="term-item"><span class="term-name">Laissez-faire</span><span class="term-def">Staff given freedom to make own decisions; good for creative/expert teams</span></div>
+        <div class="term-item"><span class="term-name">Paternalistic</span><span class="term-def">Leader makes decisions in what they believe is the best interest of staff</span></div>
+      </div></div>
+      <p>The <strong>Tannenbaum & Schmidt Continuum</strong> shows a spectrum from "boss-centred" to "subordinate-centred" leadership, and the best style depends on the situation, subordinates, and manager's own values.</p>`,
+    },
+    {
+      title: "Motivation Theories",
+      content: `<p>Motivation theories help explain what drives employees to work effectively. The spec requires knowledge of Taylor, Mayo, Maslow, Herzberg, and McClelland.</p>
+      <div class="key-terms"><h5>Theorists</h5><div class="term-list">
+        <div class="term-item"><span class="term-name">Taylor (Scientific)</span><span class="term-def">Workers are primarily motivated by money; time & motion studies, piece-rate pay. "Economic man"</span></div>
+        <div class="term-item"><span class="term-name">Mayo (Hawthorne)</span><span class="term-def">Social relationships, recognition and attention motivate workers more than pay alone</span></div>
+        <div class="term-item"><span class="term-name">Maslow (Hierarchy)</span><span class="term-def">5-tier hierarchy: Physiological → Safety → Social → Esteem → Self-actualisation. Must satisfy lower levels first</span></div>
+        <div class="term-item"><span class="term-name">Herzberg (Two-Factor)</span><span class="term-def">Hygiene factors (pay, conditions) prevent dissatisfaction. Motivators (achievement, responsibility) actually motivate</span></div>
+        <div class="term-item"><span class="term-name">McClelland</span><span class="term-def">People are driven by Need for Achievement (nAch), Need for Power (nPow), or Need for Affiliation (nAff)</span></div>
+      </div></div>`,
+    },
+    {
+      title: "Decision Making: Scientific vs Intuitive",
+      content: `<p>The <strong>scientific decision-making process</strong> involves: setting objectives → gathering information → analysing data → selecting a course of action → implementing → reviewing.</p>
+      <p><strong>Intuitive decision-making</strong> relies on experience and judgement. It is faster but potentially less accurate. Both approaches are valid depending on time constraints and data availability.</p>
+      <p><strong>McGregor's Theory X and Y</strong> describes contrasting assumptions managers make about workers:</p>
+      <div class="info-grid">
+        <div class="info-card"><h6>Theory X (Negative)</h6><ul><li>Workers dislike work</li><li>Must be controlled/coerced</li><li>Prefer to be directed</li><li>Avoid responsibility</li></ul></div>
+        <div class="info-card"><h6>Theory Y (Positive)</h6><ul><li>Work is natural</li><li>Workers are self-directed</li><li>Seek responsibility</li><li>Capable of creativity</li></ul></div>
+      </div>`,
+    },
+    {
+      title: "Decision Trees",
+      content: `<p>A decision tree is a quantitative tool that maps out possible outcomes of decisions, assigning probabilities and monetary values to calculate <strong>Expected Monetary Value (EMV)</strong>. It helps compare options objectively.</p>
+      <div class="formula-box"><div class="f-label">Formulas</div><code>Expected Value (EV) = Probability × Outcome Value
+Net Gain = EV of option − Cost of option
+Choose the option with the highest net gain</code></div>
+      <div class="key-terms"><h5>Key Terms</h5><div class="term-list">
+        <div class="term-item"><span class="term-name">Decision node (□)</span><span class="term-def">A square where a choice must be made between alternatives</span></div>
+        <div class="term-item"><span class="term-name">Chance node (○)</span><span class="term-def">A circle representing outcomes that depend on probability</span></div>
+        <div class="term-item"><span class="term-name">EMV</span><span class="term-def">Expected Monetary Value — the probability-weighted average of all possible outcomes</span></div>
+      </div></div>
+      <p>Limitations: relies on accurate probability estimates (which may be subjective), ignores qualitative factors, and can give a false sense of precision.</p>`,
+    },
+  ]
+},
+{
+  id: 2,
+  num: "3.3",
+  title: "Marketing Management",
+  accent: "#2dd4bf",
+  summary: "Marketing objectives, market research, segmentation, targeting, the marketing mix (7Ps), Ansoff Matrix and product life cycle.",
+  subtopics: [
+    {
+      title: "Marketing Objectives & Strategy",
+      content: `<p>Marketing objectives are specific goals that a firm's marketing activities aim to achieve — e.g. grow market share by 10% in 2 years. They must align with corporate objectives.</p>
+      <div class="key-terms"><h5>Key Terms</h5><div class="term-list">
+        <div class="term-item"><span class="term-name">Market share</span><span class="term-def">Sales of firm ÷ Total market sales × 100</span></div>
+        <div class="term-item"><span class="term-name">Market growth</span><span class="term-def">Percentage increase in total market sales over a period</span></div>
+        <div class="term-item"><span class="term-name">Niche market</span><span class="term-def">A small, specialised segment of a larger market</span></div>
+        <div class="term-item"><span class="term-name">Mass market</span><span class="term-def">Targeting the entire market with a standardised product</span></div>
+      </div></div>
+      <div class="formula-box"><div class="f-label">Formulas</div><code>Market Share (%) = (Firm's Sales / Total Market Sales) × 100
+Market Growth (%) = ((New Size − Old Size) / Old Size) × 100</code></div>`,
+    },
+    {
+      title: "Market Research",
+      content: `<p>Market research gathers information to reduce risk in decision-making. It can be <strong>primary</strong> (first-hand, original) or <strong>secondary</strong> (existing, published data).</p>
+      <div class="info-grid">
+        <div class="info-card"><h6>Primary Research Methods</h6><ul><li>Questionnaires/surveys</li><li>Focus groups</li><li>Interviews</li><li>Observation</li><li>Experiments/trials</li></ul></div>
+        <div class="info-card"><h6>Secondary Research Sources</h6><ul><li>Government statistics</li><li>Market research reports</li><li>Company accounts</li><li>Trade journals</li><li>Internet data</li></ul></div>
+      </div>
+      <div class="key-terms"><h5>Data Types</h5><div class="term-list">
+        <div class="term-item"><span class="term-name">Quantitative</span><span class="term-def">Numerical data (e.g. percentages, sales figures) — easier to analyse statistically</span></div>
+        <div class="term-item"><span class="term-name">Qualitative</span><span class="term-def">Opinions, attitudes and motivations — richer but harder to analyse</span></div>
+        <div class="term-item"><span class="term-name">Sampling</span><span class="term-def">Selecting a representative subset of the population. Types: random, stratified, quota, convenience</span></div>
+      </div></div>`,
+    },
+    {
+      title: "Segmentation, Targeting & Positioning",
+      content: `<p><strong>Segmentation</strong> divides the market into groups with similar characteristics. <strong>Targeting</strong> selects which segment(s) to focus on. <strong>Positioning</strong> is how a brand is perceived relative to competitors (perceptual mapping).</p>
+      <div class="info-grid">
+        <div class="info-card"><h6>Segmentation Bases</h6><ul><li>Demographic (age, gender, income)</li><li>Geographic (region, country)</li><li>Psychographic (lifestyle, values)</li><li>Behavioural (usage, loyalty)</li></ul></div>
+        <div class="info-card"><h6>Targeting Strategies</h6><ul><li>Undifferentiated (mass)</li><li>Differentiated (multiple segments)</li><li>Concentrated (one niche)</li><li>Micro/personalised</li></ul></div>
+      </div>`,
+    },
+    {
+      title: "The Marketing Mix (7Ps)",
+      content: `<p>The marketing mix is the set of tools a firm uses to achieve its objectives. The extended mix includes 7Ps (adding People, Process, Physical evidence to the original 4Ps).</p>
+      <div class="key-terms"><h5>The 7Ps</h5><div class="term-list">
+        <div class="term-item"><span class="term-name">Product</span><span class="term-def">Features, quality, brand, USP, packaging, after-sales service</span></div>
+        <div class="term-item"><span class="term-name">Price</span><span class="term-def">Cost-plus, penetration, skimming, competitive, psychological, predatory pricing</span></div>
+        <div class="term-item"><span class="term-name">Place</span><span class="term-def">Distribution channels — retailer, wholesaler, direct/e-commerce, franchising</span></div>
+        <div class="term-item"><span class="term-name">Promotion</span><span class="term-def">Advertising, PR, social media, sponsorship, sales promotions, direct marketing</span></div>
+        <div class="term-item"><span class="term-name">People</span><span class="term-def">Staff training, appearance, attitude — especially key in services</span></div>
+        <div class="term-item"><span class="term-name">Process</span><span class="term-def">Systems and procedures delivering the service experience</span></div>
+        <div class="term-item"><span class="term-name">Physical evidence</span><span class="term-def">Tangible cues of quality — premises, packaging, website design</span></div>
+      </div></div>`,
+    },
+    {
+      title: "Price Elasticity of Demand (PED)",
+      content: `<p>PED measures the responsiveness of quantity demanded to a change in price. A key concept for pricing decisions.</p>
+      <div class="formula-box"><div class="f-label">Formula</div><code>PED = % Change in Quantity Demanded ÷ % Change in Price</code></div>
+      <div class="info-grid">
+        <div class="info-card"><h6>Price Elastic (PED &gt; 1)</h6><ul><li>Demand is sensitive to price</li><li>Price rise → big fall in demand</li><li>Lower price to increase revenue</li><li>e.g. luxury goods, many substitutes</li></ul></div>
+        <div class="info-card"><h6>Price Inelastic (PED &lt; 1)</h6><ul><li>Demand is not sensitive to price</li><li>Price rise → small fall in demand</li><li>Raise price to increase revenue</li><li>e.g. necessities, strong brands</li></ul></div>
+      </div>`,
+    },
+    {
+      title: "Product Life Cycle & Ansoff Matrix",
+      content: `<p>The <strong>Product Life Cycle</strong> shows how sales change over time: Introduction → Growth → Maturity → Decline. Extension strategies (e.g. new markets, reformulation) can prolong maturity.</p>
+      <p>The <strong>Ansoff Matrix</strong> is a strategic planning tool showing growth options based on products and markets:</p>
+      <div class="info-grid">
+        <div class="info-card"><h6>Ansoff Matrix</h6><ul><li>Market penetration (existing product, existing market) — lowest risk</li><li>Market development (existing product, new market)</li><li>Product development (new product, existing market)</li><li>Diversification (new product, new market) — highest risk</li></ul></div>
+        <div class="info-card"><h6>Boston Matrix (BCG)</h6><ul><li>Stars: high share, high growth</li><li>Cash Cows: high share, low growth</li><li>Question Marks: low share, high growth</li><li>Dogs: low share, low growth</li></ul></div>
+      </div>`,
+    },
+  ]
+},
+{
+  id: 3,
+  num: "3.4",
+  title: "Operational Management",
+  accent: "#60a5fa",
+  summary: "Operations objectives, capacity utilisation, stock control, lean production, quality management, and technology in operations.",
+  subtopics: [
+    {
+      title: "Operations Objectives",
+      content: `<p>Operations management aims to produce goods and services efficiently and effectively. Key objectives include: quality, speed, dependability, flexibility, cost, and innovation.</p>
+      <div class="key-terms"><h5>Key Terms</h5><div class="term-list">
+        <div class="term-item"><span class="term-name">Productivity</span><span class="term-def">Output per worker (or per unit of input) in a given time period</span></div>
+        <div class="term-item"><span class="term-name">Efficiency</span><span class="term-def">Producing at minimum cost — maximising output from given inputs</span></div>
+        <div class="term-item"><span class="term-name">Capacity</span><span class="term-def">The maximum output a firm can produce in a given period</span></div>
+      </div></div>
+      <div class="formula-box"><div class="f-label">Formulas</div><code>Labour Productivity = Output ÷ Number of Workers
+Capacity Utilisation (%) = (Actual Output ÷ Maximum Capacity) × 100</code></div>`,
+    },
+    {
+      title: "Stock / Inventory Control",
+      content: `<p>Effective inventory management balances holding costs against ordering costs. The stock control chart shows re-order level, re-order quantity, buffer stock, and lead time.</p>
+      <div class="key-terms"><h5>Key Terms</h5><div class="term-list">
+        <div class="term-item"><span class="term-name">Buffer stock</span><span class="term-def">Minimum stock level kept as a safety net against unexpected demand or supply delays</span></div>
+        <div class="term-item"><span class="term-name">Re-order level</span><span class="term-def">The stock level at which a new order is placed</span></div>
+        <div class="term-item"><span class="term-name">Lead time</span><span class="term-def">The time between placing an order and receiving delivery</span></div>
+        <div class="term-item"><span class="term-name">JIT (Just-in-Time)</span><span class="term-def">Stock arrives exactly when needed — minimises holding costs but needs reliable suppliers</span></div>
+      </div></div>`,
+    },
+    {
+      title: "Lean Production",
+      content: `<p>Lean production aims to eliminate waste (<em>muda</em>) and maximise value. Key lean tools and concepts include:</p>
+      <div class="key-terms"><h5>Lean Concepts</h5><div class="term-list">
+        <div class="term-item"><span class="term-name">Kaizen</span><span class="term-def">Continuous incremental improvement involving all employees</span></div>
+        <div class="term-item"><span class="term-name">JIT</span><span class="term-def">Just-in-time production — stock arrives when needed, zero waste in inventory</span></div>
+        <div class="term-item"><span class="term-name">Kanban</span><span class="term-def">Visual card system triggering parts movement/production only when needed</span></div>
+        <div class="term-item"><span class="term-name">Cell production</span><span class="term-def">Small teams complete whole units — flexibility and accountability</span></div>
+        <div class="term-item"><span class="term-name">Time-based management</span><span class="term-def">Reducing time to develop and deliver products as a competitive advantage</span></div>
+      </div></div>`,
+    },
+    {
+      title: "Quality Management",
+      content: `<p>Quality management ensures products/services meet customer expectations consistently. Approaches range from inspection to total quality culture.</p>
+      <div class="key-terms"><h5>Approaches</h5><div class="term-list">
+        <div class="term-item"><span class="term-name">Quality control</span><span class="term-def">Inspecting finished products to detect defects — reactive, not preventive</span></div>
+        <div class="term-item"><span class="term-name">Quality assurance</span><span class="term-def">Checking quality at each stage of production — prevents defects reaching customers</span></div>
+        <div class="term-item"><span class="term-name">TQM</span><span class="term-def">Total Quality Management — company-wide commitment to continuous quality improvement involving all staff</span></div>
+        <div class="term-item"><span class="term-name">Benchmarking</span><span class="term-def">Comparing performance against best-in-class organisations</span></div>
+      </div></div>`,
+    },
+    {
+      title: "Technology in Operations",
+      content: `<p>Technology has transformed operations through automation, CAD/CAM, robotics and digital systems. Key benefits include increased productivity, consistency and lower labour costs, but there are significant capital investment and retraining costs.</p>
+      <div class="info-grid">
+        <div class="info-card"><h6>Benefits</h6><ul><li>Higher productivity</li><li>Greater consistency/quality</li><li>24/7 operation possible</li><li>Reduced labour costs long-term</li><li>Data collection & analysis</li></ul></div>
+        <div class="info-card"><h6>Challenges</h6><ul><li>High upfront capital costs</li><li>Redundancies / job displacement</li><li>Technical failure risk</li><li>Retraining requirements</li><li>Rapid obsolescence</li></ul></div>
+      </div>`,
+    },
+  ]
+},
+{
+  id: 4,
+  num: "3.5",
+  title: "Financial Management",
+  accent: "#4ade80",
+  summary: "Financial objectives, sources of finance, financial statements, ratio analysis, break-even and investment appraisal.",
+  subtopics: [
+    {
+      title: "Financial Objectives & Sources of Finance",
+      content: `<p>Financial objectives guide decisions about funding, profit targets, costs and liquidity. Sources of finance are either <strong>internal</strong> (retained profit, sale of assets) or <strong>external</strong> (equity, debt).</p>
+      <div class="info-grid">
+        <div class="info-card"><h6>Internal Sources</h6><ul><li>Retained profit</li><li>Sale of assets</li><li>Working capital reduction</li><li>Owner's savings</li></ul></div>
+        <div class="info-card"><h6>External Sources</h6><ul><li>Share issue (equity)</li><li>Bank loans / overdraft</li><li>Debentures (bonds)</li><li>Venture capital</li><li>Crowdfunding</li><li>Leasing</li></ul></div>
+      </div>`,
+    },
+    {
+      title: "Financial Statements",
+      content: `<p>The three key financial statements are the <strong>Income Statement</strong> (Profit & Loss), <strong>Balance Sheet</strong> (Statement of Financial Position), and <strong>Cash Flow Statement</strong>.</p>
+      <div class="formula-box"><div class="f-label">Income Statement Key Lines</div><code>Gross Profit = Revenue − Cost of Sales
+Operating Profit = Gross Profit − Operating Expenses
+Net Profit (before tax) = Operating Profit + Other Income − Interest
+Retained Profit = Net Profit after tax − Dividends</code></div>
+      <div class="formula-box"><div class="f-label">Balance Sheet Structure</div><code>Assets = Liabilities + Equity
+Non-current Assets + Current Assets = Non-current Liabilities + Current Liabilities + Equity</code></div>`,
+    },
+    {
+      title: "Ratio Analysis",
+      content: `<p>Ratio analysis interprets financial data to assess performance, profitability, liquidity and efficiency. Ratios must be compared against previous years and industry benchmarks.</p>
+      <div class="formula-box"><div class="f-label">Profitability Ratios</div><code>Gross Profit Margin (%) = (Gross Profit ÷ Revenue) × 100
+Operating Profit Margin (%) = (Operating Profit ÷ Revenue) × 100
+Return on Capital Employed (ROCE) = (Operating Profit ÷ Capital Employed) × 100
+Capital Employed = Total Assets − Current Liabilities</code></div>
+      <div class="formula-box"><div class="f-label">Liquidity Ratios</div><code>Current Ratio = Current Assets ÷ Current Liabilities   [ideal: ~1.5–2]
+Acid Test (Quick) Ratio = (Current Assets − Inventories) ÷ Current Liabilities  [ideal: ~1]</code></div>
+      <div class="formula-box"><div class="f-label">Gearing & Efficiency</div><code>Gearing (%) = (Non-current Liabilities ÷ Capital Employed) × 100  [high gearing &gt; 50% = risky]
+Payables Days = (Payables ÷ Cost of Sales) × 365
+Receivables Days = (Receivables ÷ Revenue) × 365
+Inventory Turnover = Cost of Sales ÷ Average Inventory</code></div>`,
+    },
+    {
+      title: "Break-Even Analysis",
+      content: `<p>Break-even analysis calculates the output at which total revenue equals total costs — no profit or loss.</p>
+      <div class="formula-box"><div class="f-label">Break-Even Formulas</div><code>Contribution per Unit = Selling Price − Variable Cost per Unit
+Break-Even Output = Fixed Costs ÷ Contribution per Unit
+Margin of Safety = Actual Output − Break-Even Output
+Total Contribution = Contribution per Unit × Units Sold
+Profit = Total Contribution − Fixed Costs</code></div>
+      <div class="info-grid">
+        <div class="info-card"><h6>Uses</h6><ul><li>Set minimum sales targets</li><li>Evaluate new products</li><li>Assess pricing impact</li><li>Support loan applications</li></ul></div>
+        <div class="info-card"><h6>Limitations</h6><ul><li>Assumes linear costs</li><li>Ignores stepped fixed costs</li><li>All output assumed sold</li><li>Simplistic in multi-product firms</li></ul></div>
+      </div>`,
+    },
+    {
+      title: "Investment Appraisal",
+      content: `<p>Investment appraisal techniques evaluate whether capital projects are worthwhile. The three AQA methods are Payback Period, Average Rate of Return (ARR), and Net Present Value (NPV).</p>
+      <div class="formula-box"><div class="f-label">Investment Appraisal Formulas</div><code>Payback Period = Initial Investment ÷ Annual Net Cash Flow (if even)
+[For uneven cash flows: cumulate cash flows until breakeven year]
+
+ARR (%) = (Average Annual Profit ÷ Initial Investment) × 100
+Average Annual Profit = (Total Net Cash Flow − Initial Investment) ÷ Useful Life
+
+NPV = Sum of (Cash Flow ÷ (1 + r)ⁿ) − Initial Investment
+[where r = discount rate, n = year number]
+Positive NPV = accept; Negative NPV = reject</code></div>`,
+    },
+  ]
+},
+{
+  id: 5,
+  num: "3.6",
+  title: "Human Resource Management",
+  accent: "#fb7185",
+  summary: "HR objectives, workforce planning, motivation in practice, recruitment and training, organisational design and employer–employee relations.",
+  subtopics: [
+    {
+      title: "HR Objectives & Workforce Planning",
+      content: `<p>HR aims to ensure the organisation has the right number of people, with the right skills, in the right place at the right time. Workforce planning is a systematic process to forecast future HR needs and plan how to meet them.</p>
+      <div class="key-terms"><h5>Key Terms</h5><div class="term-list">
+        <div class="term-item"><span class="term-name">Labour turnover</span><span class="term-def">(Number leaving ÷ Average workforce) × 100. High turnover is costly.</span></div>
+        <div class="term-item"><span class="term-name">Labour productivity</span><span class="term-def">Output per worker per period — key efficiency measure</span></div>
+        <div class="term-item"><span class="term-name">Labour retention</span><span class="term-def">Keeping valued staff; strategies include pay, development, culture</span></div>
+        <div class="term-item"><span class="term-name">Absenteeism rate</span><span class="term-def">(Days absent ÷ Total working days) × 100</span></div>
+      </div></div>`,
+    },
+    {
+      title: "Motivation in Practice",
+      content: `<p>Applying motivation theory to practice involves financial and non-financial rewards. Herzberg's theory emphasises that pay is a hygiene factor — it prevents dissatisfaction but doesn't truly motivate.</p>
+      <div class="info-grid">
+        <div class="info-card"><h6>Financial Rewards</h6><ul><li>Time rate (hourly pay)</li><li>Piece rate (per unit)</li><li>Salary</li><li>Bonus/commission</li><li>Profit sharing</li><li>Share ownership schemes</li></ul></div>
+        <div class="info-card"><h6>Non-Financial Rewards</h6><ul><li>Job enrichment (more challenge)</li><li>Job enlargement (more variety)</li><li>Job rotation</li><li>Delegation / autonomy</li><li>Flexible working</li><li>Training & development</li></ul></div>
+      </div>`,
+    },
+    {
+      title: "Recruitment, Selection & Training",
+      content: `<p><strong>Recruitment</strong> is attracting candidates. <strong>Selection</strong> is choosing the best candidate. <strong>Training</strong> develops skills.</p>
+      <div class="info-grid">
+        <div class="info-card"><h6>Internal vs External Recruitment</h6><ul><li>Internal: cheaper, quicker, known quantity; limits fresh ideas</li><li>External: wider pool, new perspectives; costly and slower</li></ul></div>
+        <div class="info-card"><h6>Training Types</h6><ul><li>On-the-job (induction, shadowing, coaching)</li><li>Off-the-job (courses, college, e-learning)</li><li>Apprenticeships</li></ul></div>
+      </div>`,
+    },
+    {
+      title: "Organisational Design",
+      content: `<p>Organisation structure determines how people, jobs and responsibilities are arranged. Key concepts include spans of control, hierarchy, delegation and de-layering.</p>
+      <div class="key-terms"><h5>Key Terms</h5><div class="term-list">
+        <div class="term-item"><span class="term-name">Span of control</span><span class="term-def">The number of subordinates reporting directly to one manager</span></div>
+        <div class="term-item"><span class="term-name">Chain of command</span><span class="term-def">The line of authority from top to bottom of the hierarchy</span></div>
+        <div class="term-item"><span class="term-name">Centralisation</span><span class="term-def">Decision-making concentrated at the top — consistent but slow</span></div>
+        <div class="term-item"><span class="term-name">Decentralisation</span><span class="term-def">Decision-making delegated to lower levels — faster, more motivated but less consistent</span></div>
+        <div class="term-item"><span class="term-name">De-layering</span><span class="term-def">Removing layers of management to improve communication and cut costs</span></div>
+      </div></div>`,
+    },
+    {
+      title: "Employer–Employee Relations",
+      content: `<p>Good employee relations improve productivity, reduce conflict and aid retention. Key topics include trade unions, collective bargaining, and methods of industrial action.</p>
+      <div class="info-grid">
+        <div class="info-card"><h6>Industrial Action Types</h6><ul><li>Strike (full work stoppage)</li><li>Work-to-rule</li><li>Overtime ban</li><li>Go-slow</li></ul></div>
+        <div class="info-card"><h6>Dispute Resolution</h6><ul><li>Conciliation (ACAS)</li><li>Arbitration (binding third-party)</li><li>Collective bargaining</li><li>Works councils</li></ul></div>
+      </div>`,
+    },
+  ]
+},
+{
+  id: 6,
+  num: "3.7",
+  title: "Analysing the Strategic Position",
+  accent: "#f97316",
+  summary: "Assessing the internal and external environment: SWOT, PESTLE, Porter's Five Forces, core competencies and strategic audit tools.",
+  subtopics: [
+    {
+      title: "SWOT Analysis",
+      content: `<p>SWOT (Strengths, Weaknesses, Opportunities, Threats) is a strategic framework that combines internal analysis (S&W) with external analysis (O&T). It helps a business identify where to focus strategic effort.</p>
+      <div class="info-grid">
+        <div class="info-card"><h6>Internal (Firm controls)</h6><ul><li><strong>Strengths</strong> — competitive advantages, resources, brand, skills</li><li><strong>Weaknesses</strong> — gaps, poor processes, financial constraints</li></ul></div>
+        <div class="info-card"><h6>External (Environment)</h6><ul><li><strong>Opportunities</strong> — growing markets, tech, gaps</li><li><strong>Threats</strong> — competition, regulation, economic change</li></ul></div>
+      </div>
+      <p>SWOT should lead to strategic options: leverage strengths, address weaknesses, exploit opportunities, mitigate threats.</p>`,
+    },
+    {
+      title: "Porter's Five Forces",
+      content: `<p>Porter's Five Forces analyses the competitive intensity and attractiveness of an industry. Higher forces = less profitable industry.</p>
+      <div class="key-terms"><h5>The Five Forces</h5><div class="term-list">
+        <div class="term-item"><span class="term-name">Competitive rivalry</span><span class="term-def">Number and strength of competitors, industry growth rate, switching costs</span></div>
+        <div class="term-item"><span class="term-name">Threat of new entrants</span><span class="term-def">How easy is it to enter the market? Barriers to entry: capital, brand, regulation, economies of scale</span></div>
+        <div class="term-item"><span class="term-name">Threat of substitutes</span><span class="term-def">Availability of alternative products that meet the same need</span></div>
+        <div class="term-item"><span class="term-name">Buyer power</span><span class="term-def">How much influence customers have on price — high if few large buyers, low switching costs</span></div>
+        <div class="term-item"><span class="term-name">Supplier power</span><span class="term-def">How much influence suppliers have — high if few suppliers or unique inputs</span></div>
+      </div></div>`,
+    },
+    {
+      title: "Core Competencies & Competitive Advantage",
+      content: `<p>A <strong>core competency</strong> is a unique strength that is difficult for competitors to replicate. It provides the foundation for competitive advantage. Examples: Apple's design, Amazon's logistics, Toyota's lean production.</p>
+      <p>Porter identifies two generic strategies for competitive advantage:</p>
+      <div class="info-grid">
+        <div class="info-card"><h6>Cost Leadership</h6><ul><li>Produce at the lowest cost</li><li>Appeal on price</li><li>Works with price-elastic demand</li><li>Requires operational efficiency</li></ul></div>
+        <div class="info-card"><h6>Differentiation</h6><ul><li>Unique product/service features</li><li>Premium price justified</li><li>Builds brand loyalty</li><li>Reduces price sensitivity</li></ul></div>
+      </div>`,
+    },
+    {
+      title: "Financial & Non-Financial Data in Strategy",
+      content: `<p>Strategic position analysis uses both quantitative financial data (revenue trends, profitability, ROCE, gearing) and qualitative data (brand strength, customer satisfaction, employee engagement). Both types are needed for a complete picture.</p>
+      <p>The <strong>Balanced Scorecard</strong> (Kaplan & Norton) takes a holistic view — measuring financial performance, customer satisfaction, internal processes, and learning & growth.</p>`,
+    },
+  ]
+},
+{
+  id: 7,
+  num: "3.8",
+  title: "Choosing Strategic Direction",
+  accent: "#e879f9",
+  summary: "Strategic options using Ansoff, Porter's generic strategies, and factors influencing strategic choice.",
+  subtopics: [
+    {
+      title: "Strategic Options: Ansoff & Porter",
+      content: `<p>Strategic direction involves choosing which markets to operate in and how to compete. The <strong>Ansoff Matrix</strong> provides four growth options (market penetration, market development, product development, diversification), while <strong>Porter's generic strategies</strong> define the basis of competition (cost leadership, differentiation, focus).</p>
+      <div class="info-grid">
+        <div class="info-card"><h6>Ansoff Matrix Options</h6><ul><li>Market penetration — grow existing</li><li>Market development — new markets</li><li>Product development — new products</li><li>Diversification — both new (riskiest)</li></ul></div>
+        <div class="info-card"><h6>Porter's Generic Strategies</h6><ul><li>Cost leadership (broad scope)</li><li>Differentiation (broad scope)</li><li>Cost focus (narrow scope)</li><li>Differentiation focus (narrow)</li></ul></div>
+      </div>`,
+    },
+    {
+      title: "Factors Influencing Strategic Choice",
+      content: `<p>Strategic decisions are shaped by many internal and external factors. A firm doesn't choose strategy in a vacuum.</p>
+      <div class="info-grid">
+        <div class="info-card"><h6>Internal Factors</h6><ul><li>Financial resources & risk appetite</li><li>Core competencies</li><li>Leadership style & culture</li><li>Existing market position</li><li>Workforce capabilities</li></ul></div>
+        <div class="info-card"><h6>External Factors</h6><ul><li>Market conditions & growth</li><li>Competitive environment</li><li>PESTLE factors</li><li>Stakeholder expectations</li><li>Technology trends</li></ul></div>
+      </div>`,
+    },
+    {
+      title: "Investment & Strategic Decisions",
+      content: `<p>Strategic decisions often involve major capital investment. Investment decisions must weigh financial returns (NPV, payback, ARR) against strategic importance. Sometimes a negative NPV project may still be pursued for strategic reasons (e.g. market entry, brand building).</p>
+      <p>Risk and uncertainty must also be assessed — sensitivity analysis, scenario planning and decision trees all help.</p>`,
+    },
+  ]
+},
+{
+  id: 8,
+  num: "3.9",
+  title: "Strategic Methods",
+  accent: "#34d399",
+  summary: "How firms pursue strategies: organic and inorganic growth, international strategy, digital strategy and alliances.",
+  subtopics: [
+    {
+      title: "Organic vs Inorganic Growth",
+      content: `<p><strong>Organic growth</strong> occurs internally — launching new products, entering new markets using the firm's own resources. It is slower but lower-risk and maintains culture.</p>
+      <p><strong>Inorganic (external) growth</strong> involves mergers, acquisitions, joint ventures or strategic alliances. It is faster but riskier and can cause cultural clashes.</p>
+      <div class="key-terms"><h5>Types of Integration</h5><div class="term-list">
+        <div class="term-item"><span class="term-name">Horizontal integration</span><span class="term-def">Merger/acquisition with a competitor in the same industry and stage of production</span></div>
+        <div class="term-item"><span class="term-name">Vertical integration</span><span class="term-def">Forward (acquiring customer/distributor) or backward (acquiring supplier) integration</span></div>
+        <div class="term-item"><span class="term-name">Conglomerate</span><span class="term-def">Diversifying into completely unrelated industries (highest risk)</span></div>
+      </div></div>`,
+    },
+    {
+      title: "Strategic Alliances & Joint Ventures",
+      content: `<p>A <strong>strategic alliance</strong> is a partnership where firms cooperate without merging — sharing resources, risks and expertise. A <strong>joint venture</strong> creates a new entity jointly owned by two or more firms.</p>
+      <div class="info-grid">
+        <div class="info-card"><h6>Benefits</h6><ul><li>Shared risk and cost</li><li>Access to new markets</li><li>Complementary expertise</li><li>Faster than organic</li><li>Avoid full acquisition costs</li></ul></div>
+        <div class="info-card"><h6>Risks</h6><ul><li>Conflicting objectives</li><li>Cultural incompatibility</li><li>Loss of control</li><li>IP / knowledge leakage</li><li>Potential instability</li></ul></div>
+      </div>`,
+    },
+    {
+      title: "Franchising",
+      content: `<p><strong>Franchising</strong> allows a franchisor to grant a franchisee the right to operate using the franchisor's brand, system and products in exchange for fees/royalties. Examples: McDonald's, Subway, The Body Shop.</p>
+      <div class="info-grid">
+        <div class="info-card"><h6>Franchisor Benefits/Risks</h6><ul><li>Rapid growth with lower capital</li><li>Franchisee bears local risk</li><li>BUT: harder to maintain quality standards</li><li>Reputational risk from poor franchisees</li></ul></div>
+        <div class="info-card"><h6>Franchisee Benefits/Risks</h6><ul><li>Established brand/support system</li><li>Lower failure rate than startups</li><li>BUT: royalty fees reduce profit</li><li>Limited independence in decisions</li></ul></div>
+      </div>`,
+    },
+    {
+      title: "International Strategy & Globalisation",
+      content: `<p>Global strategy requires adapting products and approaches for international markets. Firms can choose between a <strong>global strategy</strong> (standardised product worldwide) or a <strong>multi-domestic strategy</strong> (adapted for each market).</p>
+      <div class="key-terms"><h5>Key Terms</h5><div class="term-list">
+        <div class="term-item"><span class="term-name">Offshoring</span><span class="term-def">Moving business operations to another country to reduce costs</span></div>
+        <div class="term-item"><span class="term-name">Reshoring</span><span class="term-def">Returning outsourced operations back to home country</span></div>
+        <div class="term-item"><span class="term-name">FDI</span><span class="term-def">Foreign Direct Investment — investing in physical assets in another country</span></div>
+        <div class="term-item"><span class="term-name">Protectionism</span><span class="term-def">Government policies (tariffs, quotas) protecting domestic industry from foreign competition</span></div>
+      </div></div>`,
+    },
+  ]
+},
+{
+  id: 9,
+  num: "3.10",
+  title: "Managing Strategic Change",
+  accent: "#f0b429",
+  summary: "Why and how organisations change, managing resistance, organisational culture and the role of leadership in change.",
+  subtopics: [
+    {
+      title: "Causes & Types of Change",
+      content: `<p>Change may be driven by internal factors (new leadership, poor performance, restructuring) or external factors (technology disruption, competitive pressure, regulation, economic shifts). Change can be incremental or transformational.</p>
+      <div class="info-grid">
+        <div class="info-card"><h6>Internal Triggers</h6><ul><li>New strategy / leadership</li><li>Financial pressures</li><li>Poor performance</li><li>Cultural shift</li></ul></div>
+        <div class="info-card"><h6>External Triggers</h6><ul><li>Technology disruption</li><li>New regulation / legislation</li><li>Economic changes</li><li>Competitor actions</li></ul></div>
+      </div>`,
+    },
+    {
+      title: "Kotter's 8-Step Model",
+      content: `<p>Kotter's model provides a structured approach to leading organisational change successfully. Each step builds the foundation for the next.</p>
+      <div class="key-terms"><h5>Kotter's 8 Steps</h5><div class="term-list">
+        <div class="term-item"><span class="term-name">1. Create urgency</span><span class="term-def">Help people see why change is needed now</span></div>
+        <div class="term-item"><span class="term-name">2. Build guiding coalition</span><span class="term-def">Assemble a team with power and credibility to lead change</span></div>
+        <div class="term-item"><span class="term-name">3. Form vision & strategy</span><span class="term-def">Create a clear direction for the change</span></div>
+        <div class="term-item"><span class="term-name">4. Communicate the vision</span><span class="term-def">Share it widely and consistently</span></div>
+        <div class="term-item"><span class="term-name">5. Empower action</span><span class="term-def">Remove obstacles and enable people to act on the vision</span></div>
+        <div class="term-item"><span class="term-name">6. Generate short-term wins</span><span class="term-def">Create visible, early successes to build momentum</span></div>
+        <div class="term-item"><span class="term-name">7. Sustain acceleration</span><span class="term-def">Keep driving change; don't declare victory too early</span></div>
+        <div class="term-item"><span class="term-name">8. Institute change</span><span class="term-def">Embed changes in culture and systems so they stick</span></div>
+      </div></div>`,
+    },
+    {
+      title: "Lewin's Force Field Analysis",
+      content: `<p>Force field analysis identifies forces <em>driving</em> change and forces <em>resisting</em> change. Successful change requires either strengthening driving forces or weakening restraining forces.</p>
+      <p>The model helps managers visualise the balance of power around a proposed change, and develop strategies to shift that balance — e.g. involving staff (reduces resistance) or demonstrating competitive threats (increases drive).</p>
+      <div class="formula-box"><div class="f-label">Concept</div><code>Change happens when:  Driving Forces &gt; Restraining Forces
+Score each force (1–5) to assess feasibility of change</code></div>`,
+    },
+    {
+      title: "Organisational Culture",
+      content: `<p>Organisational culture is the shared values, beliefs and norms that shape behaviour — "the way we do things here." Culture profoundly influences strategy, innovation and change.</p>
+      <p><strong>Handy's Cultural Typology</strong> identifies four types:</p>
+      <div class="key-terms"><h5>Handy's Culture Types</h5><div class="term-list">
+        <div class="term-item"><span class="term-name">Power culture</span><span class="term-def">Central power figure controls decisions (spider's web). Fast decisions but dependent on the leader</span></div>
+        <div class="term-item"><span class="term-name">Role culture</span><span class="term-def">Bureaucratic, defined by rules and procedures (Greek temple). Stable but slow to change</span></div>
+        <div class="term-item"><span class="term-name">Task culture</span><span class="term-def">Team-based, flexible, project-focused (net). Creative and adaptive</span></div>
+        <div class="term-item"><span class="term-name">Person culture</span><span class="term-def">Individuals are central; firm exists to serve them (galaxy). Common in law/medical partnerships</span></div>
+      </div></div>
+      <p>Culture change is very difficult — it requires sustained leadership commitment, new role models, revised systems and genuine buy-in.</p>`,
+    },
+    {
+      title: "Managing & Overcoming Resistance",
+      content: `<p>Resistance to change is natural. People may resist due to fear of the unknown, loss of status/security, lack of trust, or disagreement with the change. Managers can address resistance through:</p>
+      <div class="info-grid">
+        <div class="info-card"><h6>Strategies to Overcome Resistance</h6><ul><li>Education and communication</li><li>Participation and involvement</li><li>Facilitation and support</li><li>Negotiation and incentives</li><li>Manipulation (last resort)</li><li>Explicit / implicit coercion (risky)</li></ul></div>
+        <div class="info-card"><h6>Role of Leadership in Change</h6><ul><li>Transformational leaders inspire vision</li><li>Build urgency and coalition</li><li>Role model new behaviours</li><li>Communicate clearly and often</li><li>Celebrate wins to sustain momentum</li></ul></div>
+      </div>`,
+    },
+  ]
+}
+];
+
+// =====================================================
+// FLASHCARDS DATA
+// =====================================================
+const CARDS = [
+  {section:"3.1",q:"What is the formula for Added Value?",a:"<strong>Added Value</strong> = Selling Price − Cost of Bought-in Materials & Components. It represents the value a business adds through its processes."},
+  {section:"3.1",q:"What is opportunity cost?",a:"The <strong>next-best alternative foregone</strong> when a choice is made. E.g. using a factory to make chairs means it can't make tables — the lost tables are the opportunity cost."},
+  {section:"3.1",q:"Define 'market share' and give its formula.",a:"Market share = a firm's sales as a percentage of total market sales.<br><strong>Formula:</strong> (Firm's Sales ÷ Total Market Sales) × 100"},
+  {section:"3.1",q:"What are the two main types of business objectives?",a:"<strong>Financial</strong> (profit, revenue, ROCE) and <strong>non-financial</strong> (market share, CSR, employee satisfaction, brand reputation)."},
+  {section:"3.1",q:"Name the six PESTLE factors.",a:"<strong>P</strong>olitical, <strong>E</strong>conomic, <strong>S</strong>ocial, <strong>T</strong>echnological, <strong>L</strong>egal, <strong>E</strong>nvironmental — the external macro-environment framework."},
+  {section:"3.1",q:"What are economies of scale?",a:"Cost advantages that arise as output increases, leading to a <strong>lower average cost per unit</strong>. Types include purchasing, technical, financial, managerial and risk-bearing economies."},
+  {section:"3.2",q:"What is the difference between management and leadership?",a:"<strong>Management</strong> is about planning, organising and controlling resources. <strong>Leadership</strong> is about inspiring and influencing people toward a shared vision. Managers do things right; leaders do the right things."},
+  {section:"3.2",q:"Describe Maslow's Hierarchy of Needs.",a:"Five-level pyramid: <strong>Physiological</strong> → Safety → Social → Esteem → <strong>Self-Actualisation</strong>. Lower needs must be satisfied before higher ones motivate. Limitations: rigid, not universal."},
+  {section:"3.2",q:"What are Herzberg's two factors?",a:"<strong>Hygiene factors</strong> (pay, conditions, supervision) — prevent dissatisfaction but don't motivate. <strong>Motivators</strong> (achievement, recognition, responsibility) — actually increase motivation."},
+  {section:"3.2",q:"How is Expected Monetary Value (EMV) calculated in a decision tree?",a:"<strong>EMV = Probability × Outcome Value</strong>. Sum all EMVs at a chance node to get expected value. Net gain = EMV − cost of that option. Choose the highest net gain."},
+  {section:"3.2",q:"What are McGregor's Theory X and Theory Y assumptions?",a:"<strong>Theory X:</strong> workers dislike work, must be controlled, avoid responsibility. <strong>Theory Y:</strong> workers are self-motivated, seek responsibility, capable of creativity."},
+  {section:"3.2",q:"What does the Tannenbaum-Schmidt Continuum show?",a:"A spectrum of leadership styles from <strong>boss-centred</strong> (autocratic) to <strong>subordinate-centred</strong> (delegating). The appropriate style depends on the situation, subordinates and manager's values."},
+  {section:"3.3",q:"What is Price Elasticity of Demand (PED)?",a:"PED = % Change in Quantity Demanded ÷ % Change in Price. If PED > 1: <strong>elastic</strong> (cut price to raise revenue). If PED < 1: <strong>inelastic</strong> (raise price to raise revenue)."},
+  {section:"3.3",q:"Name the four Ansoff Matrix strategies.",a:"<strong>Market Penetration</strong> (existing/existing), Market Development (existing/new), Product Development (new/existing), <strong>Diversification</strong> (new/new — highest risk)."},
+  {section:"3.3",q:"What are the 7Ps of the marketing mix?",a:"Product, Price, Place, Promotion (the original 4) plus <strong>People, Process, Physical Evidence</strong> — the extended mix for services marketing."},
+  {section:"3.3",q:"What is the difference between primary and secondary market research?",a:"<strong>Primary:</strong> original first-hand data (surveys, interviews, focus groups) — tailored but expensive. <strong>Secondary:</strong> existing published data — cheaper/faster but may be outdated or not specific."},
+  {section:"3.3",q:"What are the four stages of the Product Life Cycle?",a:"Introduction → Growth → Maturity → Decline. Extension strategies (new markets, reformulation, re-branding) can prolong the <strong>maturity</strong> stage and delay decline."},
+  {section:"3.3",q:"What are the four BCG Matrix categories?",a:"<strong>Stars</strong> (high share, high growth), Cash Cows (high share, low growth), Question Marks (low share, high growth), <strong>Dogs</strong> (low share, low growth). Helps manage product portfolio."},
+  {section:"3.4",q:"What is the formula for capacity utilisation?",a:"<strong>Capacity Utilisation (%) = (Actual Output ÷ Maximum Capacity) × 100</strong>. Operating below 100% means spare capacity; above ~85% can cause quality/flexibility issues."},
+  {section:"3.4",q:"What is JIT (Just-in-Time) production?",a:"An inventory system where stock arrives <strong>exactly when needed</strong> in the production process. Reduces holding costs and waste, but requires very reliable suppliers and precise scheduling."},
+  {section:"3.4",q:"What is Kaizen?",a:"A Japanese concept meaning <strong>continuous incremental improvement</strong>. Involves all employees in making small, frequent improvements to processes — a key element of lean production."},
+  {section:"3.4",q:"What is the difference between quality control and quality assurance?",a:"<strong>Quality control:</strong> inspection of finished products — reactive. <strong>Quality assurance:</strong> checking quality at each production stage — proactive, preventing defects from being passed on."},
+  {section:"3.4",q:"What is Total Quality Management (TQM)?",a:"A <strong>company-wide commitment</strong> to continuous quality improvement, involving every employee at all levels. Focuses on getting things right first time and building quality into processes."},
+  {section:"3.5",q:"Give the formulas for Gross Profit Margin and Operating Profit Margin.",a:"<strong>GPM (%) = (Gross Profit ÷ Revenue) × 100</strong><br><strong>OPM (%) = (Operating Profit ÷ Revenue) × 100</strong>. Higher margins indicate better cost control relative to revenue."},
+  {section:"3.5",q:"What is ROCE and why does it matter?",a:"Return on Capital Employed = <strong>(Operating Profit ÷ Capital Employed) × 100</strong>. It shows how efficiently capital is used to generate profit. Compare to interest rates: ROCE should exceed cost of borrowing."},
+  {section:"3.5",q:"What are the current ratio and acid test ratio formulas?",a:"<strong>Current Ratio = Current Assets ÷ Current Liabilities</strong> (ideal ~1.5–2)<br><strong>Acid Test = (Current Assets − Inventories) ÷ Current Liabilities</strong> (ideal ~1). Measure short-term liquidity."},
+  {section:"3.5",q:"What is the break-even formula?",a:"<strong>Break-Even Output = Fixed Costs ÷ Contribution per Unit</strong><br>Contribution per Unit = Selling Price − Variable Cost per Unit<br>Margin of Safety = Actual Output − Break-Even Output"},
+  {section:"3.5",q:"What are the three investment appraisal methods on the spec?",a:"<strong>1. Payback Period</strong> — how long to recover initial investment.<br><strong>2. ARR (Average Rate of Return)</strong> — average annual profit as % of investment.<br><strong>3. NPV (Net Present Value)</strong> — present value of future cash flows minus investment. Positive NPV = accept."},
+  {section:"3.5",q:"What is gearing and what does a high gearing ratio suggest?",a:"<strong>Gearing (%) = (Non-current Liabilities ÷ Capital Employed) × 100</strong>. Gearing >50% = highly geared — heavily reliant on debt, higher financial risk, especially if interest rates rise."},
+  {section:"3.6",q:"What is the formula for labour turnover?",a:"<strong>Labour Turnover (%) = (Number Leaving ÷ Average Workforce) × 100</strong>. High turnover increases recruitment, training and induction costs, and can reduce morale and productivity."},
+  {section:"3.6",q:"What is the difference between job enrichment and job enlargement?",a:"<strong>Job enrichment</strong> — adding more challenging, higher-level tasks (vertical loading) — increases motivation. <strong>Job enlargement</strong> — adding more tasks at the same level (horizontal loading) — increases variety."},
+  {section:"3.6",q:"What is the span of control?",a:"The number of <strong>subordinates reporting directly</strong> to one manager. Wide span = fewer layers, lower cost, but risk of overload. Narrow span = closer supervision but taller hierarchy and slower communication."},
+  {section:"3.6",q:"What is collective bargaining?",a:"A process where <strong>trade unions negotiate</strong> with employers on behalf of their members regarding pay, conditions and employment terms. Results in a collective agreement covering all workers in the bargaining unit."},
+  {section:"3.7",q:"What is Porter's Five Forces framework?",a:"Analyses industry competitiveness through: <strong>competitive rivalry, threat of new entrants, threat of substitutes, buyer power, supplier power</strong>. High forces = less attractive/profitable industry."},
+  {section:"3.7",q:"What is a SWOT analysis?",a:"Framework combining <strong>internal analysis</strong> (Strengths, Weaknesses) with <strong>external analysis</strong> (Opportunities, Threats). Used to identify strategic priorities and options."},
+  {section:"3.7",q:"What are Porter's two generic competitive strategies?",a:"<strong>Cost Leadership</strong> — producing at the lowest cost to compete on price. <strong>Differentiation</strong> — offering unique features to justify a premium price. Both can be applied to broad or narrow (focus) markets."},
+  {section:"3.8",q:"What factors influence strategic choice?",a:"Internal: financial resources, core competencies, risk appetite, culture, leadership.<br>External: market conditions, competitive environment, PESTLE factors, stakeholder expectations."},
+  {section:"3.9",q:"What is the difference between organic and inorganic growth?",a:"<strong>Organic:</strong> growth through own internal resources (new products, new markets) — slower, lower risk. <strong>Inorganic:</strong> growth via M&A, joint ventures, franchising — faster but higher risk, potential culture clash."},
+  {section:"3.9",q:"What are the three types of integration in M&A?",a:"<strong>Horizontal</strong> — acquiring a competitor at the same stage. <strong>Vertical</strong> — acquiring supplier (backward) or distributor (forward). <strong>Conglomerate</strong> — acquiring an unrelated business (diversification)."},
+  {section:"3.9",q:"What is franchising and what are the key risks for a franchisor?",a:"Franchising grants a <strong>franchisee</strong> the right to use the franchisor's brand and system for fees/royalties. Key risks: difficult to maintain quality standards, reputational damage from poor franchisees, limited control."},
+  {section:"3.10",q:"What are the 8 steps in Kotter's change model?",a:"Create urgency → Build coalition → Form vision → Communicate vision → Empower action → <strong>Generate quick wins</strong> → Sustain acceleration → Institute the change. Each step must be completed before the next."},
+  {section:"3.10",q:"What is Lewin's Force Field Analysis?",a:"Change occurs when <strong>driving forces > restraining forces</strong>. Managers must either strengthen drivers or weaken resistors. Helps visualise feasibility of change and develop targeted strategies."},
+  {section:"3.10",q:"Name Handy's four cultural types.",a:"<strong>Power</strong> (spider's web — centralised leader), <strong>Role</strong> (Greek temple — rules/bureaucracy), <strong>Task</strong> (net — project teams), <strong>Person</strong> (galaxy — individual experts central)."},
+  {section:"3.10",q:"Why do employees resist change and how can managers address it?",a:"Resistance stems from: fear of unknown, loss of status, lack of trust. Address via: <strong>communication, participation, training/support, negotiation/incentives</strong>. Coercion is a last resort and can backfire."},
+];
+
+// Build a flat search index
+const SEARCH_INDEX = [];
+TOPICS.forEach(t => {
+  t.subtopics.forEach(s => {
+    SEARCH_INDEX.push({ topicId: t.id, topicNum: t.num, topicTitle: t.title, subtopic: s.title });
+  });
+});
+CARDS.forEach(c => {
+  SEARCH_INDEX.push({ card: true, section: c.section, term: c.q.replace('?',''), def: c.a.replace(/<[^>]+>/g,'') });
+});
+
+// =====================================================
+// STATE
+// =====================================================
+let progress = JSON.parse(localStorage.getItem('aqaBizProgress') || '{}');
+let missedCards = JSON.parse(localStorage.getItem('aqaBizMissed') || '[]'); // array of card indices
+let quizCards = [];
+let quizCardIndices = []; // tracks original CARDS index for each quiz card
+let quizIndex = 0;
+let quizGood = 0;
+let quizFlipped = false;
+let sessionMissed = []; // indices missed in current session
+
+// =====================================================
+// INIT
+// =====================================================
+function init() {
+  renderHome();
+  updateProgress();
+  updateMissedBadge();
+  attachNav();
+  attachSearch();
+  attachTopbar();
+
+  document.getElementById('hamburger').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('overlay').classList.toggle('open');
+  });
+  document.getElementById('overlay').addEventListener('click', closeSidebar);
+
+  // Reset button → custom modal
+  document.getElementById('reset-btn').addEventListener('click', () => {
+    document.getElementById('confirm-modal').classList.add('open');
+  });
+  document.getElementById('modal-cancel').addEventListener('click', () => {
+    document.getElementById('confirm-modal').classList.remove('open');
+  });
+  document.getElementById('modal-backdrop').addEventListener('click', () => {
+    document.getElementById('confirm-modal').classList.remove('open');
+  });
+  document.getElementById('modal-confirm').addEventListener('click', () => {
+    document.getElementById('confirm-modal').classList.remove('open');
+    localStorage.removeItem('aqaBizProgress');
+    localStorage.removeItem('aqaBizMissed');
+    progress = {};
+    missedCards = [];
+    sessionMissed = [];
+    updateProgress();
+    updateMissedBadge();
+    renderHome();
+    showView('home');
+  });
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+
+// =====================================================
+// NAVIGATION
+// =====================================================
+function attachNav() {
+  document.querySelectorAll('.nav-item[data-view]').forEach(el => {
+    el.addEventListener('click', () => {
+      const view = el.dataset.view;
+      const id = el.dataset.id !== undefined ? parseInt(el.dataset.id) : null;
+      if (view === 'home') showView('home');
+      else if (view === 'quiz') startQuiz();
+      else if (view === 'missed') showMissedBank();
+      else if (view === 'topic' && id !== null) showTopic(id);
+      closeSidebar();
+    });
+  });
+}
+
+function attachTopbar() {
+  document.querySelector('.btn-gold[data-view="quiz"]').addEventListener('click', startQuiz);
+}
+
+function showView(name) {
+  document.getElementById('view-home').style.display = name === 'home' ? 'block' : 'none';
+  document.getElementById('view-topic').style.display = name === 'topic' ? 'block' : 'none';
+  document.getElementById('view-quiz').style.display = name === 'quiz' ? 'block' : 'none';
+  document.getElementById('view-missed').style.display = name === 'missed' ? 'block' : 'none';
+  // Update nav active state
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  if (name === 'home') document.querySelector('.nav-item[data-view="home"]').classList.add('active');
+  if (name === 'quiz') document.querySelector('.nav-item[data-view="quiz"]').classList.add('active');
+  if (name === 'missed') { const m = document.getElementById('nav-missed'); if (m) m.classList.add('active'); }
+}
+
+// =====================================================
+// HOME
+// =====================================================
+function renderHome() {
+  const grid = document.getElementById('section-grid');
+  const colors = ['#f0b429','#a78bfa','#2dd4bf','#60a5fa','#4ade80','#fb7185','#f97316','#e879f9','#34d399','#f0b429'];
+  grid.innerHTML = TOPICS.map((t, i) => `
+    <div class="section-card ${progress[t.id] ? 'done' : ''}" style="--accent-color:${colors[i]}" onclick="showTopic(${t.id})">
+      <span class="card-num">${t.num}</span>
+      <h3>${t.title}</h3>
+      <p>${t.summary}</p>
+      <div class="done-badge">✓</div>
+    </div>
+  `).join('');
+
+  document.getElementById('stat-done').textContent = Object.keys(progress).length;
+}
+
+// =====================================================
+// TOPIC VIEW
+// =====================================================
+function showTopic(id) {
+  const t = TOPICS[id];
+  const el = document.getElementById('view-topic');
+  el.innerHTML = `
+    <div class="topic-header fade-up">
+      <div class="back-btn" onclick="showView('home')">← Back to Dashboard</div>
+      <div class="tag">${t.num}</div>
+      <h2>${t.title}</h2>
+      <p>${t.summary}</p>
+      <div class="topic-actions">
+        <button class="btn btn-ghost" onclick="startQuizForTopic(${id})">Quiz This Topic</button>
+        <button class="mark-done-btn ${progress[id]?'done':''}" id="mark-done-${id}" onclick="toggleDone(${id})">
+          ${progress[id] ? '✓ Marked Complete' : '○ Mark Complete'}
+        </button>
+      </div>
+    </div>
+    ${t.subtopics.map((s, si) => `
+      <div class="subtopic fade-up" id="sub-${id}-${si}">
+        <div class="subtopic-head" onclick="toggleSubtopic('${id}-${si}')">
+          <h4>${s.title}</h4>
+          <svg class="chevron" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </div>
+        <div class="subtopic-body">${s.content}</div>
+      </div>
+    `).join('')}
+  `;
+  showView('topic');
+  document.getElementById('view-topic').classList.add('fade-up');
+  // update nav
+  document.querySelectorAll('.nav-item[data-id]').forEach(el => el.classList.remove('active'));
+  const navEl = document.querySelector(`.nav-item[data-id="${id}"]`);
+  if (navEl) navEl.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleSubtopic(key) {
+  document.getElementById('sub-' + key).classList.toggle('open');
+}
+
+function toggleDone(id) {
+  if (progress[id]) {
+    delete progress[id];
+  } else {
+    progress[id] = true;
+  }
+  localStorage.setItem('aqaBizProgress', JSON.stringify(progress));
+  updateProgress();
+  const btn = document.getElementById(`mark-done-${id}`);
+  if (btn) {
+    btn.classList.toggle('done', !!progress[id]);
+    btn.textContent = progress[id] ? '✓ Marked Complete' : '○ Mark Complete';
+  }
+  renderHome();
+}
+
+function updateProgress() {
+  const done = Object.keys(progress).length;
+  const pct = Math.round((done / TOPICS.length) * 100);
+  document.getElementById('prog-pct').textContent = pct + '%';
+  document.getElementById('prog-bar').style.width = pct + '%';
+  document.getElementById('stat-done').textContent = done;
+}
+
+// =====================================================
+// QUIZ
+// =====================================================
+function startQuiz(topicId, fromMissed) {
+  sessionMissed = [];
+  if (fromMissed) {
+    // Quiz only the stored missed cards
+    quizCardIndices = [...missedCards];
+    quizCards = quizCardIndices.map(i => CARDS[i]);
+    if (!quizCards.length) { showMissedBank(); return; }
+  } else if (typeof topicId === 'number') {
+    const t = TOPICS[topicId];
+    const filtered = CARDS.reduce((acc, c, i) => { if (c.section === t.num) acc.push(i); return acc; }, []);
+    quizCardIndices = filtered.length ? filtered : CARDS.map((_,i)=>i);
+    // shuffle
+    quizCardIndices = quizCardIndices.sort(() => Math.random() - 0.5);
+    quizCards = quizCardIndices.map(i => CARDS[i]);
+  } else {
+    quizCardIndices = CARDS.map((_,i)=>i).sort(() => Math.random() - 0.5);
+    quizCards = quizCardIndices.map(i => CARDS[i]);
+  }
+  quizIndex = 0;
+  quizGood = 0;
+  document.getElementById('q-total').textContent = quizCards.length;
+  document.getElementById('stat-cards').textContent = CARDS.length;
+  // Reset visibility
+  document.getElementById('quiz-result').style.display = 'none';
+  document.getElementById('flashcard').style.display = 'flex';
+  document.querySelector('.quiz-progress').style.display = 'flex';
+  document.querySelector('.quiz-controls').style.display = 'flex';
+  document.querySelector('.quiz-header').style.display = 'block';
+  renderCard();
+  showView('quiz');
+  attachQuizControls();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function startQuizForTopic(id) {
+  startQuiz(id);
+}
+
+function renderCard() {
+  if (quizIndex >= quizCards.length) {
+    endQuiz();
+    return;
+  }
+  const c = quizCards[quizIndex];
+  document.getElementById('fc-section').textContent = c.section;
+  document.getElementById('fc-question').textContent = c.q;
+  document.getElementById('fc-answer').innerHTML = c.a;
+  document.getElementById('flashcard').classList.remove('flipped');
+  quizFlipped = false;
+  document.getElementById('q-cur').textContent = quizIndex + 1;
+  const pct = (quizIndex / quizCards.length) * 100;
+  document.getElementById('q-fill').style.width = pct + '%';
+}
+
+function attachQuizControls() {
+  // Replace elements to clear all previous event listeners cleanly
+  ['flashcard','q-flip','q-good','q-hard','q-restart','q-revise-missed'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const clone = el.cloneNode(true);
+    el.parentNode.replaceChild(clone, el);
+  });
+
+  document.getElementById('flashcard').addEventListener('click', flipCard);
+  document.getElementById('q-flip').addEventListener('click', flipCard);
+  document.getElementById('q-good').addEventListener('click', () => {
+    // If this card was previously in missedCards bank, remove it since user now knows it
+    const cardIdx = quizCardIndices[quizIndex];
+    const pos = missedCards.indexOf(cardIdx);
+    if (pos !== -1) { missedCards.splice(pos, 1); saveMissed(); }
+    quizGood++;
+    quizIndex++;
+    renderCard();
+  });
+  document.getElementById('q-hard').addEventListener('click', () => {
+    // Add to missed bank
+    const cardIdx = quizCardIndices[quizIndex];
+    if (!missedCards.includes(cardIdx)) {
+      missedCards.push(cardIdx);
+      saveMissed();
+    }
+    if (!sessionMissed.includes(cardIdx)) sessionMissed.push(cardIdx);
+    quizIndex++;
+    renderCard();
+  });
+  document.getElementById('q-restart').addEventListener('click', () => startQuiz());
+  document.getElementById('q-revise-missed').addEventListener('click', () => showMissedBank());
+}
+
+function flipCard() {
+  quizFlipped = !quizFlipped;
+  document.getElementById('flashcard').classList.toggle('flipped', quizFlipped);
+}
+
+function endQuiz() {
+  document.getElementById('flashcard').style.display = 'none';
+  document.querySelector('.quiz-controls').style.display = 'none';
+  document.querySelector('.quiz-progress').style.display = 'none';
+  const result = document.getElementById('quiz-result');
+  result.style.display = 'flex';
+  result.style.flexDirection = 'column';
+  result.style.alignItems = 'center';
+  document.getElementById('result-score').textContent = quizGood + '/' + quizCards.length;
+  const pct = Math.round((quizGood / quizCards.length) * 100);
+  let msg = '';
+  if (pct >= 90) msg = '🌟 Excellent! You know this material really well.';
+  else if (pct >= 70) msg = '👍 Good effort! Keep reviewing the ones you missed.';
+  else if (pct >= 50) msg = '📚 Solid start — keep revising for better results.';
+  else msg = '💪 Keep going — regular revision makes all the difference!';
+  document.getElementById('result-msg').textContent = msg;
+
+  // Show missed cards summary
+  const missedSummary = document.getElementById('missed-summary');
+  const missedListPreview = document.getElementById('missed-list-preview');
+  const reviseMissedBtn = document.getElementById('q-revise-missed');
+  if (sessionMissed.length > 0) {
+    missedSummary.style.display = 'block';
+    missedListPreview.innerHTML = sessionMissed.slice(0, 5).map(i =>
+      `<li>${CARDS[i].q}</li>`
+    ).join('') + (sessionMissed.length > 5 ? `<li>…and ${sessionMissed.length - 5} more</li>` : '');
+    reviseMissedBtn.style.display = 'inline-block';
+  } else {
+    missedSummary.style.display = 'none';
+    reviseMissedBtn.style.display = 'none';
+  }
+  updateMissedBadge();
+
+  // Re-attach result buttons (they were cloned above)
+  document.getElementById('q-restart').addEventListener('click', () => startQuiz());
+  document.getElementById('q-revise-missed').addEventListener('click', () => showMissedBank());
+}
+
+// =====================================================
+// MISSED CARDS BANK
+// =====================================================
+function saveMissed() {
+  localStorage.setItem('aqaBizMissed', JSON.stringify(missedCards));
+}
+
+function updateMissedBadge() {
+  const navMissed = document.getElementById('nav-missed');
+  const badge = document.getElementById('missed-badge');
+  if (!navMissed || !badge) return;
+  if (missedCards.length > 0) {
+    navMissed.style.display = 'flex';
+    badge.textContent = missedCards.length;
+  } else {
+    navMissed.style.display = 'none';
+    badge.textContent = '';
+  }
+}
+
+function showMissedBank() {
+  const listEl = document.getElementById('missed-bank-list');
+  const actionsEl = document.getElementById('missed-bank-actions');
+  updateMissedBadge();
+
+  if (missedCards.length === 0) {
+    listEl.innerHTML = `<div class="missed-empty"><div class="em-icon">✓</div><p>No weak cards saved yet.<br>Complete a quiz and tap "Revise Again" on cards you're unsure of.</p></div>`;
+    actionsEl.innerHTML = `<button class="btn btn-gold" onclick="startQuiz()">Start a Quiz</button>`;
+  } else {
+    listEl.innerHTML = missedCards.map(i => {
+      const c = CARDS[i];
+      return `<div class="missed-card-item">
+        <div class="mc-info">
+          <div class="mc-section">${c.section}</div>
+          <div class="mc-q">${c.q}</div>
+        </div>
+        <button class="mc-remove" title="Remove from list" onclick="removeMissedCard(${i})">✕</button>
+      </div>`;
+    }).join('');
+    actionsEl.innerHTML = `
+      <button class="btn btn-gold" onclick="startQuiz(undefined, true)">Quiz Weak Cards (${missedCards.length})</button>
+      <button class="btn btn-ghost" onclick="if(confirm('Clear all weak cards?')){missedCards=[];saveMissed();updateMissedBadge();showMissedBank();}">Clear All</button>
+    `;
+  }
+
+  showView('missed');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function removeMissedCard(cardIdx) {
+  missedCards = missedCards.filter(i => i !== cardIdx);
+  saveMissed();
+  showMissedBank(); // re-render
+}
+
+// =====================================================
+// SEARCH
+// =====================================================
+function attachSearch() {
+  const input = document.getElementById('search-input');
+  const results = document.getElementById('search-results');
+
+  input.addEventListener('input', () => {
+    const q = input.value.toLowerCase().trim();
+    if (!q || q.length < 2) { results.style.display = 'none'; return; }
+
+    const matches = [];
+    TOPICS.forEach(t => {
+      t.subtopics.forEach(s => {
+        if (s.title.toLowerCase().includes(q) || t.title.toLowerCase().includes(q)) {
+          matches.push({ type: 'subtopic', topicId: t.id, num: t.num, title: t.title, sub: s.title });
+        }
+      });
+    });
+    CARDS.forEach(c => {
+      if (c.q.toLowerCase().includes(q) || c.a.replace(/<[^>]+>/g,'').toLowerCase().includes(q)) {
+        matches.push({ type: 'card', section: c.section, term: c.q, def: c.a.replace(/<[^>]+>/g,'').slice(0,80)+'…' });
+      }
+    });
+
+    if (!matches.length) { results.style.display = 'none'; return; }
+    results.style.display = 'block';
+    results.innerHTML = matches.slice(0, 8).map(m => {
+      if (m.type === 'subtopic') {
+        return `<div class="sr-item" onclick="showTopic(${m.topicId});document.getElementById('search-results').style.display='none';document.getElementById('search-input').value=''">
+          <div class="sr-section">${m.num} · ${m.title}</div>
+          <div class="sr-term">${m.sub}</div>
+        </div>`;
+      } else {
+        return `<div class="sr-item" onclick="startQuiz();document.getElementById('search-results').style.display='none';document.getElementById('search-input').value=''">
+          <div class="sr-section">Flashcard · ${m.section}</div>
+          <div class="sr-term">${m.term}</div>
+          <div class="sr-def">${m.def}</div>
+        </div>`;
+      }
+    }).join('');
+  });
+
+  document.addEventListener('click', e => {
+    if (!document.getElementById('search-wrap').contains(e.target)) {
+      results.style.display = 'none';
+    }
+  });
+}
+
+// =====================================================
+// PWA SERVICE WORKER (inline)
+// =====================================================
+if ('serviceWorker' in navigator) {
+  const swCode = `
+    const CACHE = 'aqabiz-v1';
+    self.addEventListener('install', e => {
+      self.skipWaiting();
+    });
+    self.addEventListener('fetch', e => {
+      e.respondWith(
+        caches.open(CACHE).then(cache =>
+          cache.match(e.request).then(cached =>
+            cached || fetch(e.request).then(resp => {
+              cache.put(e.request, resp.clone());
+              return resp;
+            }).catch(() => cached)
+          )
+        )
+      );
+    });
+  `;
+  const blob = new Blob([swCode], { type: 'application/javascript' });
+  const url = URL.createObjectURL(blob);
+  navigator.serviceWorker.register(url).catch(() => {});
+}
+
+// =====================================================
+// START
+// =====================================================
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
