@@ -817,7 +817,6 @@
 
   @media (max-width: 600px) {
     .section-grid { grid-template-columns: 1fr; }
-    .topbar-actions .btn-ghost { display: none; }
   }
 
   @media (max-width: 480px) {
@@ -924,6 +923,7 @@
     <div class="prog-bar-outer">
       <div class="prog-bar-inner" id="prog-bar" style="width:0%"></div>
     </div>
+    <button class="btn btn-ghost" id="reset-btn" style="margin-top:12px;width:100%;font-size:0.75rem;padding:8px 12px;text-align:center" title="Reset all progress and missed cards">Reset Progress</button>
   </div>
 </aside>
 
@@ -946,7 +946,6 @@
       <div id="search-results"></div>
     </div>
     <div class="topbar-actions">
-      <button class="btn btn-ghost" id="reset-btn" title="Reset all progress and missed cards">Reset Progress</button>
       <button class="btn btn-gold" data-view="quiz" data-id="">Quiz Me</button>
     </div>
   </header>
