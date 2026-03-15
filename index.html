@@ -6,8 +6,11 @@
 <meta name="theme-color" content="#0f1117">
 <meta name="description" content="AQA A-Level Business Studies Revision App – Spec 7132, for 2026 exams">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="AQA Business">
-<title>AQA A-Level Business Revision | 7132</title>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="BizRevise">
+<title>BizRevise</title>
+<link rel="icon" type="image/jpeg" href="https://i.ibb.co/Qvj79x5q/favicon.jpg">
+<link rel="apple-touch-icon" href="https://i.ibb.co/Qvj79x5q/favicon.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -148,6 +151,7 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    min-width: 0;
   }
 
   /* ── TOPBAR ── */
@@ -156,7 +160,7 @@
     background: rgba(15,17,23,0.92);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
-    padding: 0 32px;
+    padding: 0 40px;
     height: 60px;
     display: flex;
     align-items: center;
@@ -226,7 +230,13 @@
   .btn-gold:hover { background: #f5c435; }
 
   /* ── CONTENT ── */
-  #content { padding: 40px 48px; max-width: 900px; }
+  #content {
+    padding: 44px 56px;
+    max-width: 1100px;
+    width: 100%;
+    margin: 0 auto;
+    flex: 1;
+  }
 
   /* ── HOME ── */
   #view-home .hero {
@@ -264,6 +274,7 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 16px;
     margin-bottom: 40px;
+    max-width: 500px;
   }
   .stat-card {
     background: var(--surface);
@@ -286,7 +297,7 @@
 
   .section-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 14px;
   }
   .section-card {
@@ -787,6 +798,10 @@
   .sr-item .sr-def { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; line-height: 1.4; }
 
   /* ── RESPONSIVE ── */
+  @media (max-width: 1200px) {
+    .section-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
   @media (max-width: 900px) {
     #sidebar { transform: translateX(-100%); }
     #sidebar.open { transform: translateX(0); }
@@ -794,10 +809,15 @@
     #content { padding: 24px 20px; }
     #hamburger { display: block; }
     #overlay.open { display: block; }
-    .section-grid { grid-template-columns: 1fr; }
-    .stats-row { grid-template-columns: repeat(3, 1fr); }
+    .section-grid { grid-template-columns: repeat(2, 1fr); }
+    .stats-row { grid-template-columns: repeat(3, 1fr); max-width: 100%; }
     .info-grid { grid-template-columns: 1fr; }
     #view-home .hero h2 { font-size: 1.8rem; }
+  }
+
+  @media (max-width: 600px) {
+    .section-grid { grid-template-columns: 1fr; }
+    .topbar-actions .btn-ghost { display: none; }
   }
 
   @media (max-width: 480px) {
@@ -2074,31 +2094,52 @@ function attachSearch() {
 }
 
 // =====================================================
-// PWA SERVICE WORKER (inline)
+// PWA: MANIFEST + SERVICE WORKER
 // =====================================================
-if ('serviceWorker' in navigator) {
-  const swCode = `
-    const CACHE = 'aqabiz-v1';
-    self.addEventListener('install', e => {
-      self.skipWaiting();
-    });
-    self.addEventListener('fetch', e => {
-      e.respondWith(
-        caches.open(CACHE).then(cache =>
-          cache.match(e.request).then(cached =>
-            cached || fetch(e.request).then(resp => {
-              cache.put(e.request, resp.clone());
-              return resp;
-            }).catch(() => cached)
+(function() {
+  // Inject web app manifest as a blob so the icon shows on Add to Home Screen
+  const manifest = {
+    name: 'BizRevise – AQA Business',
+    short_name: 'BizRevise',
+    description: 'AQA A-Level Business Revision – Spec 7132',
+    start_url: '.',
+    display: 'standalone',
+    background_color: '#0f1117',
+    theme_color: '#0f1117',
+    icons: [
+      { src: 'https://i.ibb.co/Qvj79x5q/favicon.jpg', sizes: '192x192', type: 'image/jpeg' },
+      { src: 'https://i.ibb.co/Qvj79x5q/favicon.jpg', sizes: '512x512', type: 'image/jpeg' }
+    ]
+  };
+  const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
+  const manifestUrl = URL.createObjectURL(manifestBlob);
+  const link = document.createElement('link');
+  link.rel = 'manifest';
+  link.href = manifestUrl;
+  document.head.appendChild(link);
+
+  // Service worker for offline caching
+  if ('serviceWorker' in navigator) {
+    const swCode = `
+      const CACHE = 'bizrevise-v1';
+      self.addEventListener('install', () => self.skipWaiting());
+      self.addEventListener('fetch', e => {
+        e.respondWith(
+          caches.open(CACHE).then(cache =>
+            cache.match(e.request).then(cached =>
+              cached || fetch(e.request).then(resp => {
+                cache.put(e.request, resp.clone());
+                return resp;
+              }).catch(() => cached)
+            )
           )
-        )
-      );
-    });
-  `;
-  const blob = new Blob([swCode], { type: 'application/javascript' });
-  const url = URL.createObjectURL(blob);
-  navigator.serviceWorker.register(url).catch(() => {});
-}
+        );
+      });
+    `;
+    const swBlob = new Blob([swCode], { type: 'application/javascript' });
+    navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
+  }
+})();
 
 // =====================================================
 // START
