@@ -33,6 +33,43 @@
     --shadow: 0 4px 24px rgba(0,0,0,0.4);
   }
 
+  body.light-mode {
+    --bg: #f4f5f7;
+    --surface: #ffffff;
+    --surface2: #eef0f4;
+    --border: #d0d5e2;
+    --gold: #b07d0a;
+    --gold-dim: #8a6108;
+    --teal: #0f8a7a;
+    --rose: #dc2149;
+    --violet: #6d44e8;
+    --blue: #1d6dbf;
+    --green: #16a34a;
+    --text: #0f1117;
+    --text-muted: #4a5270;
+    --text-dim: #7a83a0;
+    --shadow: 0 4px 24px rgba(0,0,0,0.1);
+  }
+
+  /* THEME TOGGLE */
+  #theme-toggle {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    letter-spacing: 0.03em;
+    transition: all 0.15s;
+    background: var(--surface2);
+    color: var(--text-muted);
+    margin-top: 12px;
+    width: 100%;
+    text-align: center;
+  }
+  #theme-toggle:hover { color: var(--text); border-color: var(--text-dim); }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   html { scroll-behavior: smooth; }
@@ -157,7 +194,7 @@
   /* ── TOPBAR ── */
   #topbar {
     position: sticky; top: 0;
-    background: rgba(15,17,23,0.92);
+    background: color-mix(in srgb, var(--bg) 92%, transparent);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
     padding: 0 40px;
@@ -225,7 +262,7 @@
   .btn-ghost:hover { color: var(--text); border-color: var(--text-dim); }
   .btn-gold {
     background: var(--gold);
-    color: #0f1117;
+    color: var(--bg);
   }
   .btn-gold:hover { background: #f5c435; }
 
@@ -351,8 +388,7 @@
     align-items: center;
     justify-content: center;
     font-size: 0.6rem;
-    color: #0f1117;
-    opacity: 0;
+    color: var(--bg);
     transition: opacity 0.3s;
   }
   .section-card.done .done-badge { opacity: 1; }
@@ -924,6 +960,7 @@
       <div class="prog-bar-inner" id="prog-bar" style="width:0%"></div>
     </div>
     <button class="btn btn-ghost" id="reset-btn" style="margin-top:12px;width:100%;font-size:0.75rem;padding:8px 12px;text-align:center" title="Reset all progress and missed cards">Reset Progress</button>
+    <button id="theme-toggle">☀️ Light mode</button>
   </div>
 </aside>
 
@@ -2138,6 +2175,32 @@ function attachSearch() {
     const swBlob = new Blob([swCode], { type: 'application/javascript' });
     navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
   }
+})();
+
+// =====================================================
+// THEME TOGGLE
+// =====================================================
+(function() {
+  const btn   = document.getElementById('theme-toggle');
+  const saved = localStorage.getItem('biz_theme') || 'dark';
+
+  function applyTheme(t) {
+    if (t === 'light') {
+      document.body.classList.add('light-mode');
+      btn.textContent = '🌙 Dark mode';
+    } else {
+      document.body.classList.remove('light-mode');
+      btn.textContent = '☀️ Light mode';
+    }
+  }
+
+  applyTheme(saved);
+
+  btn.addEventListener('click', function() {
+    const next = document.body.classList.contains('light-mode') ? 'dark' : 'light';
+    localStorage.setItem('biz_theme', next);
+    applyTheme(next);
+  });
 })();
 
 // =====================================================
