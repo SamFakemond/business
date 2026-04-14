@@ -391,8 +391,10 @@
     color: var(--bg);
     transition: opacity 0.3s;
   }
-  .section-card.done .done-badge { opacity: 1; }
-
+  .section-card .done-badge {
+  opacity: 0;
+}
+.section-card.done .done-badge { opacity: 1; }
   /* ── TOPIC VIEW ── */
   #view-topic { display: none; }
   .topic-header {
